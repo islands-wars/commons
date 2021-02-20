@@ -1,0 +1,123 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath(group: 'org.jfrog.buildinfo', name: 'build-info-extractor-gradle', version: '4.+')
+    }
+}
+
+apply plugin: 'com.jfrog.artifactory'
+apply plugin: 'maven-publish'
+apply plugin: 'java-library'
+apply plugin: 'java'
+
+group 'fr.islandswars'
+version '0.2'
+
+sourceCompatibility = 1.15
+targetCompatibility = 1.15
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+repositories {
+    mavenCentral()
+    mavenLocal() //needed for paper
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java']
+        }
+    }
+    test {
+        java {
+            srcDirs = ['src/test/java']
+        }
+    }
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+javadoc {
+    doFirst {
+        options.setWindowTitle('Islands Wars - Commons')
+        options.setDocTitle('Islands Wars - Commons')
+        options.setUse(true)
+        options.setVersion(true)
+        options.setAuthor(true)
+        options.addBooleanOption('html5', true)
+    }
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': rootProject.name, 'Implementation-Version': project.version.toString()
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            pom {
+                name = rootProject.name + '-' + project.name
+                url = 'http://www.islandswars.fr'
+                licenses {
+                    license {
+                        name = 'GNU GENERAL PUBLIC LICENSE, version 3'
+                        url = 'https://www.gnu.org/licenses/gpl-3.0.txt'
+                    }
+                }
+            }
+            artifact jar
+        }
+    }
+}
+
+artifactory {
+    def github = System.getenv("GITHUB_REF") //GITHUB_REF ref/heads/branchname
+    def branch = "local"
+    if (github != null) {
+        def parts = github.split("/")
+        branch = String.join('-', Arrays.copyOfRange(parts, 2, parts.length))
+    }
+    def user = System.getenv("ARTIFACTORY_USER")
+    def pass = System.getenv("ARTIFACTORY_PASSWORD")
+    println 'Build on branch : ' + branch
+    if (branch != 'master')
+        subprojects {
+            version = version + '-' + branch
+        }
+
+    publish {
+        contextUrl = 'http://jfrog.islandswars.fr:8082/artifactory'
+        repository {
+            repoKey = 'islandswars'
+            username = user
+            password = pass
+            maven = true
+        }
+        defaults {
+            publications('mavenJava')
+        }
+        publishBuildInfo = true
+        publishArtifacts = true
+        publishPom = true
+    }
+}

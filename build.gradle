@@ -1,19 +1,22 @@
 buildscript {
     repositories {
         jcenter()
+        gradlePluginPortal()
     }
     dependencies {
         classpath(group: 'org.jfrog.buildinfo', name: 'build-info-extractor-gradle', version: '4.+')
+        classpath 'com.bmuschko:gradle-docker-plugin:6.7.0'
     }
 }
 
+apply plugin: 'com.bmuschko.docker-java-application'
 apply plugin: 'com.jfrog.artifactory'
 apply plugin: 'maven-publish'
 apply plugin: 'java-library'
 apply plugin: 'java'
 
 group 'fr.islandswars'
-version '0.2'
+version '0.1'
 
 sourceCompatibility = 1.15
 targetCompatibility = 1.15
@@ -63,6 +66,14 @@ jar {
     }
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+docker {
+    javaApplication {
+        baseImage = 'openjdk:15-alpine'
+        maintainer = 'Burgaud Valentin "xharos@islandswars.fr"'
+        jvmArgs = ['-Xms256m', '-Xmx2048m']
     }
 }
 

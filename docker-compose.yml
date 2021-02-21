@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  debug:
+    image: alpine:3.7
+    stdin_open: true
+    tty: true
+    command: sh
+    secrets:
+      - my_file_secret
+
+secrets:                        # top level secrets block
+  my_file_secret:
+    file: ./test_secret.txt

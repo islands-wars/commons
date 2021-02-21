@@ -1,12 +1,12 @@
-package fr.islandswars.commons;
+package fr.islandswars.commons.functional;
 
 /**
- * File <b>Hello</b> located on fr.islandswars.commons
- * Hello is a part of commons.
+ * File <b>ResourceDisposable</b> located on fr.islandswars.commons.functional
+ * ResourceDisposable is a part of commons.
  * <p>
  * Copyright (c) 2017 - 2021 Islands Wars.
  * <p>
- * commons is free software: you can redistribute it and/or modify
+ * Islands Wars - Commons is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
@@ -17,13 +17,21 @@ package fr.islandswars.commons;
  * GNU General Public License for more details.
  * <p>
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <a href="http://www.gnu.org/licenses/">GNU license</a>.
+ * along with this program. If not, see <a href="http://www.gnu.org/licenses/">GNU GPL license</a>.
  * <p>
  *
  * @author Valentin Burgaud (Xharos), {@literal <xharos@islandswars.fr>}
- * Created the 20/02/2021 at 08:54
- * @since 0.2
+ * Created the 27/06/2018 at 14:56
+ * @since 0.1
  */
-public class Hello {
+@FunctionalInterface
+public interface ResourceDisposable<T> {
 
+	/**
+	 * Releases the given generic resource
+	 *
+	 * @param resource a value to dispose
+	 * @throws Exception if some exceptions occurs
+	 */
+	void dispose(T resource) throws Exception;
 }

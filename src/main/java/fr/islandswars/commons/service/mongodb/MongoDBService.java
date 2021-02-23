@@ -68,7 +68,7 @@ public class MongoDBService extends Service<MongoDatabase> {
 		var socketSettings  = SocketSettings.builder().connectTimeout(10, TimeUnit.SECONDS).build();
 		var clusterSettings = ClusterSettings.builder().hosts(Collections.singletonList(mongoAddress)).build();
 		var settings        = MongoClientSettings.builder().clusterSettings(clusterSettings).credentialList(Collections.singletonList(credential)).socketSettings(socketSettings).build();
-		MongoClient client  = MongoClients.create(settings);
+		var client  = MongoClients.create(settings);
 		this.database = client.getDatabase(serviceName);
 	}
 

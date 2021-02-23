@@ -1,18 +1,14 @@
 buildscript {
     repositories {
         jcenter()
-        gradlePluginPortal()
     }
     dependencies {
         classpath(group: 'org.jfrog.buildinfo', name: 'build-info-extractor-gradle', version: '4.+')
-        classpath 'com.bmuschko:gradle-docker-plugin:6.7.0'
     }
 }
 
-apply plugin: 'com.bmuschko.docker-java-application'
 apply plugin: 'com.jfrog.artifactory'
 apply plugin: 'maven-publish'
-apply plugin: 'java-library'
 apply plugin: 'java'
 
 group 'fr.islandswars'
@@ -76,14 +72,6 @@ jar {
     }
 }
 
-docker {
-    javaApplication {
-        baseImage = 'openjdk:15-alpine'
-        maintainer = 'Burgaud Valentin "xharos@islandswars.fr"'
-        jvmArgs = ['-Xms256m', '-Xmx2048m']
-    }
-}
-
 java {
     withJavadocJar()
     withSourcesJar()
@@ -119,9 +107,7 @@ artifactory {
     def pass = System.getenv("ARTIFACTORY_PASSWORD")
     println 'Build on branch : ' + branch
     if (branch != 'master')
-        subprojects {
-            version = version + '-' + branch
-        }
+        version = version + '-' + branch
 
     publish {
         contextUrl = 'http://jfrog.islandswars.fr:8082/artifactory'

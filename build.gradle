@@ -16,7 +16,7 @@ apply plugin: 'java-library'
 apply plugin: 'java'
 
 group 'fr.islandswars'
-version '0.1'
+version '0.2'
 
 sourceCompatibility = 1.15
 targetCompatibility = 1.15

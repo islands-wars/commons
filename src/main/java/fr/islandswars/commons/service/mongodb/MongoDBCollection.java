@@ -9,7 +9,6 @@ import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import fr.islandswars.commons.service.collection.Collection;
-import fr.islandswars.commons.service.collection.Filter;
 import java.util.ArrayList;
 import java.util.List;
 import org.bson.Document;
@@ -35,9 +34,10 @@ import org.bson.conversions.Bson;
  * along with this program. If not, see <a href="http://www.gnu.org/licenses/">GNU license</a>.
  * <p>
  *
+ * @author Sceat and David <a href = "https://github.com/HydreIO/AresCommons/tree/master/src/main/java/fr/aresrpg/commons/domain/database">AresCommons</a>
  * @author Valentin Burgaud (Xharos), {@literal <xharos@islandswars.fr>}
  * Created the 22/02/2021 at 18:55
- * @since TODO edit
+ * @since 0.1
  */
 public class MongoDBCollection<T> implements Collection<T> {
 
@@ -56,67 +56,6 @@ public class MongoDBCollection<T> implements Collection<T> {
 		this.clazz = clazz;
 	}
 
-	private static Bson toMongoDBFilter(Filter filter) {
-		if (filter == null)
-			return null;
-		Bson mfilter = null;
-		switch (filter.getType()) {
-			case AND:
-				mfilter = Filters.and(toMongoDBFilters((Filter[]) filter.getValue()));
-				break;
-			case OR:
-				mfilter = Filters.or(toMongoDBFilters((Filter[]) filter.getValue()));
-				break;
-			case NOR:
-				mfilter = Filters.nor(toMongoDBFilters((Filter[]) filter.getValue()));
-				break;
-			case IN:
-				mfilter = Filters.in(filter.getName(), (Object[]) filter.getValue());
-				break;
-			case NOT_IN:
-				mfilter = Filters.nin(filter.getName(), (Object[]) filter.getValue());
-				break;
-			case EQUALS:
-				mfilter = Filters.eq(filter.getName(), filter.getValue());
-				break;
-			case GREATER:
-				mfilter = Filters.gt(filter.getName(), filter.getValue());
-				break;
-			case GREATER_OR_EQUALS:
-				mfilter = Filters.gte(filter.getName(), filter.getValue());
-				break;
-			case LESS:
-				mfilter = Filters.lt(filter.getName(), filter.getValue());
-				break;
-			case LESS_OR_EQUALS:
-				mfilter = Filters.lte(filter.getName(), filter.getValue());
-				break;
-			case EXISTS:
-				mfilter = Filters.exists(filter.getName(), (Boolean) filter.getValue());
-				break;
-			case ARRAY_SIZE:
-				mfilter = Filters.size(filter.getName(), (Integer) filter.getValue());
-				break;
-			case TEXT:
-				mfilter = Filters.text((String) filter.getValue());
-				break;
-			case REGEX:
-				mfilter = Filters.regex(filter.getName(), (String) filter.getValue());
-				break;
-			default:
-				break;
-		}
-		return mfilter;
-	}
-
-	private static Bson[] toMongoDBFilters(Filter... filters) {
-		Bson[] bfilters = new Bson[filters.length];
-		for (var i = 0; i < bfilters.length; i++) {
-			bfilters[i] = toMongoDBFilter(filters[i]);
-		}
-		return bfilters;
-	}
-
 	@Override
 	public void count(SingleResultCallback<Long> resultCallback) {
 		collection.count(resultCallback);
@@ -129,17 +68,15 @@ public class MongoDBCollection<T> implements Collection<T> {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void find(Filter filter, int max, SingleResultCallback<List<T>> resultCallback) {
+	public void find(Bson filter, int max, SingleResultCallback<List<T>> resultCallback) {
 		List<T>                found = new ArrayList<>();
 		FindIterable<Document> cursor;
 		try {
 			if (filter == null)
 				cursor = collection.find().limit(max);
 			else
-				cursor = collection.find(toMongoDBFilter(filter)).limit(max);
-			cursor.forEach((doc) -> {
-				found.add(gson.fromJson(doc.toJson(), getClazz()));
-			}, (viod, throwable) -> resultCallback.onResult(found, throwable));
+				cursor = collection.find(filter).limit(max);
+			cursor.forEach((doc) -> found.add(gson.fromJson(doc.toJson(), getClazz())), (viod, throwable) -> resultCallback.onResult(found, throwable));
 		} catch (Exception e) {
 			System.err.println("Could'not deserialize");
 		}
@@ -153,20 +90,20 @@ public class MongoDBCollection<T> implements Collection<T> {
 	}
 
 	@Override
-	public void putOrUpdate(Filter filter, T value, SingleResultCallback<UpdateResult> resultCallback) {
+	public void putOrUpdate(Bson filter, T value, SingleResultCallback<UpdateResult> resultCallback) {
 		var document = Document.parse(gson.toJson(value));
-		collection.updateOne(toMongoDBFilter(filter), new Document("$set", document), UPSERT, resultCallback);
+		collection.updateOne(filter, new Document("$set", document), UPSERT, resultCallback);
 	}
 
 	@Override
-	public void putOrUpdateAll(Filter filter, T value, SingleResultCallback<UpdateResult> resultCallback) {
+	public void putOrUpdateAll(Bson filter, T value, SingleResultCallback<UpdateResult> resultCallback) {
 		var document = Document.parse(gson.toJson(value));
-		collection.updateMany(toMongoDBFilter(filter), new Document("$set", document), resultCallback);
+		collection.updateMany(filter, new Document("$set", document), resultCallback);
 	}
 
 	@Override
-	public void remove(Filter filter, SingleResultCallback<DeleteResult> resultCallback) {
-		collection.deleteMany(toMongoDBFilter(filter), resultCallback);
+	public void remove(Bson filter, SingleResultCallback<DeleteResult> resultCallback) {
+		collection.deleteMany(filter, resultCallback);
 	}
 
 	@Override
@@ -185,15 +122,15 @@ public class MongoDBCollection<T> implements Collection<T> {
 	}
 
 	@Override
-	public void update(Filter filter, T value, SingleResultCallback<UpdateResult> resultCallback) {
+	public void update(Bson filter, T value, SingleResultCallback<UpdateResult> resultCallback) {
 		var document = Document.parse(gson.toJson(value));
-		collection.updateOne(toMongoDBFilter(filter), new Document("$set", document), resultCallback);
+		collection.updateOne(filter, new Document("$set", document), resultCallback);
 	}
 
 	@Override
-	public void updateAll(Filter filter, T value, SingleResultCallback<UpdateResult> resultCallback) {
+	public void updateAll(Bson filter, T value, SingleResultCallback<UpdateResult> resultCallback) {
 		var document = Document.parse(gson.toJson(value));
-		collection.updateMany(toMongoDBFilter(filter), new Document("$set", document), resultCallback);
+		collection.updateMany(filter, new Document("$set", document), resultCallback);
 	}
 
 	@Override

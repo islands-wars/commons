@@ -12,12 +12,13 @@ import com.mongodb.connection.SocketSettings;
 import fr.islandswars.commons.service.Key;
 import fr.islandswars.commons.service.Service;
 import fr.islandswars.commons.service.collection.Collection;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * File <b>MongoDBService</b> located on fr.islandswars.commons.service.mongodb
@@ -41,14 +42,13 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Valentin Burgaud (Xharos), {@literal <xharos@islandswars.fr>}
  * Created the 22/02/2021 at 18:55
- * @since TODO edit
+ * @since 0.1
  */
 @ThreadSafe
 public class MongoDBService extends Service<MongoDatabase> {
 
 	private final    ConcurrentMap<String, MongoDBCollection> collections;
 	private volatile boolean                                  close;
-	private          MongoClient                              client;
 	private          MongoDatabase                            database;
 
 	public MongoDBService() {
@@ -68,7 +68,7 @@ public class MongoDBService extends Service<MongoDatabase> {
 		var socketSettings  = SocketSettings.builder().connectTimeout(10, TimeUnit.SECONDS).build();
 		var clusterSettings = ClusterSettings.builder().hosts(Collections.singletonList(mongoAddress)).build();
 		var settings        = MongoClientSettings.builder().clusterSettings(clusterSettings).credentialList(Collections.singletonList(credential)).socketSettings(socketSettings).build();
-		this.client = MongoClients.create(settings);
+		MongoClient client  = MongoClients.create(settings);
 		this.database = client.getDatabase(serviceName);
 	}
 
@@ -90,11 +90,17 @@ public class MongoDBService extends Service<MongoDatabase> {
 
 	@Override
 	public void load(Map<String, String> properties) throws NullPointerException {
-		var username = "root";//properties.get(Type.MONGO_USER.getKey());
-		var password = "example";//properties.get(Type.MONGO_PASS.getKey());
-		var database = "admin";//properties.get(Type.MONGO_DB.getKey());
-		var host     = "localhost";//properties.get(Type.MONGO_HOST.getKey());
-		var port     = 27017;//Integer.parseInt(properties.get(Type.MONGO_PORT.getKey()));
+		var username = properties.get(Type.MONGO_USER.getKey());
+		var password = properties.get(Type.MONGO_PASS.getKey());
+		var database = properties.get(Type.MONGO_DB.getKey());
+		var host     = properties.get(Type.MONGO_HOST.getKey());
+		var port     = Integer.parseInt(properties.get(Type.MONGO_PORT.getKey()));
+		Logger.getLogger("org.mongodb.driver.connection").setLevel(Level.OFF);
+		Logger.getLogger("org.mongodb.driver.management").setLevel(Level.OFF);
+		Logger.getLogger("org.mongodb.driver.cluster").setLevel(Level.OFF);
+		Logger.getLogger("org.mongodb.driver.protocol.insert").setLevel(Level.OFF);
+		Logger.getLogger("org.mongodb.driver.protocol.query").setLevel(Level.OFF);
+		Logger.getLogger("org.mongodb.driver.protocol.update").setLevel(Level.OFF);
 		load(port, host, username, password, database);
 	}
 

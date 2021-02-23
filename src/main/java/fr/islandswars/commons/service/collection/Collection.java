@@ -5,6 +5,7 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import fr.islandswars.commons.functional.Identifier;
 import java.util.List;
+import org.bson.conversions.Bson;
 
 /**
  * File <b>Collection</b> located on fr.islandswars.commons.service.collection
@@ -26,9 +27,10 @@ import java.util.List;
  * along with this program. If not, see <a href="http://www.gnu.org/licenses/">GNU license</a>.
  * <p>
  *
+ * @author Sceat and David <a href = "https://github.com/HydreIO/AresCommons/tree/master/src/main/java/fr/aresrpg/commons/domain/database">AresCommons</a>
  * @author Valentin Burgaud (Xharos), {@literal <xharos@islandswars.fr>}
  * Created the 22/02/2021 at 18:56
- * @since TODO edit
+ * @since 0.1
  */
 public interface Collection<T> extends Identifier<String> {
 
@@ -54,7 +56,7 @@ public interface Collection<T> extends Identifier<String> {
 	 * @param max            the maximum of value to getLocal
 	 * @param resultCallback a callback performed in async by mongo at the end
 	 */
-	void find(Filter filter, int max, SingleResultCallback<List<T>> resultCallback);
+	void find(Bson filter, int max, SingleResultCallback<List<T>> resultCallback);
 
 	/**
 	 * Put the value in the collection
@@ -71,7 +73,7 @@ public interface Collection<T> extends Identifier<String> {
 	 * @param value          the new value
 	 * @param resultCallback a callback performed in async by mongo at the end
 	 */
-	void putOrUpdate(Filter filter, T value, SingleResultCallback<UpdateResult> resultCallback);
+	void putOrUpdate(Bson filter, T value, SingleResultCallback<UpdateResult> resultCallback);
 
 	/**
 	 * Put or update all the value in the collection
@@ -80,7 +82,7 @@ public interface Collection<T> extends Identifier<String> {
 	 * @param value          the new value
 	 * @param resultCallback a callback performed in async by mongo at the end
 	 */
-	void putOrUpdateAll(Filter filter, T value, SingleResultCallback<UpdateResult> resultCallback);
+	void putOrUpdateAll(Bson filter, T value, SingleResultCallback<UpdateResult> resultCallback);
 
 	/**
 	 * Remove the values matching the filter
@@ -88,7 +90,7 @@ public interface Collection<T> extends Identifier<String> {
 	 * @param filter         the filter to use
 	 * @param resultCallback a callback performed in async by mongo at the end
 	 */
-	void remove(Filter filter, SingleResultCallback<DeleteResult> resultCallback);
+	void remove(Bson filter, SingleResultCallback<DeleteResult> resultCallback);
 
 	/**
 	 * Find the values in the collection and sort them
@@ -106,7 +108,7 @@ public interface Collection<T> extends Identifier<String> {
 	 * @param value          the new value
 	 * @param resultCallback a callback performed in async by mongo at the end
 	 */
-	void update(Filter filter, T value, SingleResultCallback<UpdateResult> resultCallback);
+	void update(Bson filter, T value, SingleResultCallback<UpdateResult> resultCallback);
 
 	/**
 	 * Update all the value in the collection
@@ -115,6 +117,6 @@ public interface Collection<T> extends Identifier<String> {
 	 * @param value          the new value
 	 * @param resultCallback a callback performed in async by mongo at the end
 	 */
-	void updateAll(Filter filter, T value, SingleResultCallback<UpdateResult> resultCallback);
+	void updateAll(Bson filter, T value, SingleResultCallback<UpdateResult> resultCallback);
 
 }

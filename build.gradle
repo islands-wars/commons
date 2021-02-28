@@ -12,7 +12,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'java'
 
 group 'fr.islandswars'
-version '0.2'
+version '0.2.1'
 
 sourceCompatibility = 1.15
 targetCompatibility = 1.15
@@ -37,13 +37,13 @@ sourceSets {
 }
 
 dependencies {
-    compile 'redis.clients:jedis:3.5.1'
-    compile 'org.slf4j:slf4j-nop:1.7.30'
-    compile 'org.mongodb:mongodb-driver-async:3.0.4'
-    compile 'com.rabbitmq:amqp-client:5.11.0'
-    compile 'com.github.docker-java:docker-java-core:3.2.7'
-    compile 'com.github.docker-java:docker-java-transport-httpclient5:3.2.7'
-    implementation 'com.google.code.gson:gson:2.8.6'
+    compileOnly 'redis.clients:jedis:3.5.1'
+    compileOnly 'org.slf4j:slf4j-nop:1.7.30'
+    compileOnly 'org.mongodb:mongodb-driver-async:3.0.4'
+    compileOnly 'com.rabbitmq:amqp-client:5.11.0'
+    compileOnly 'com.github.docker-java:docker-java-core:3.2.7'
+    compileOnly 'com.github.docker-java:docker-java-transport-httpclient5:3.2.7'
+    compileOnly 'com.google.code.gson:gson:2.8.6'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 }

@@ -35,7 +35,7 @@ import java.util.concurrent.CompletableFuture;
  *
  * @author Valentin Burgaud (Xharos), {@literal <xharos@islandswars.fr>}
  * Created the 23/02/2021 at 13:59
- * @since TODO edit
+ * @since 0.1
  */
 @ThreadSafe
 public class DockerContainer {

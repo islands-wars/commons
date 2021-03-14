@@ -29,6 +29,7 @@ import java.io.File;
 public enum ServiceType {
 
 	MONGODB("mongo"),
+	REDIS("redis"),
 	DOCKER("docker"),
 	RABBITMQ("rabbit");
 

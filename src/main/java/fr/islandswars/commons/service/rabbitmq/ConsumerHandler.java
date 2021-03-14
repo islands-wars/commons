@@ -29,7 +29,7 @@ import java.nio.ByteBuffer;
  *
  * @author Valentin Burgaud (Xharos), {@literal <xharos@islandswars.fr>}
  * Created the 23/02/2021 at 10:15
- * @since TODO edit
+ * @since 0.1
  */
 @NotThreadSafe
 public abstract class ConsumerHandler implements Consumer {

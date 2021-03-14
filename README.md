@@ -1,4 +1,4 @@
-# <img src="https://raw.githubusercontent.com/islands-wars/guidelines/master/assets/icon.png" width="64"> Islands Wars - Api
+# <img src="https://raw.githubusercontent.com/islands-wars/guidelines/master/assets/icon.png" width="64"> Islands Wars - Commons
 
 
 > Islands Wars is a Minecraft multiplayer server network.

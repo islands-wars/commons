@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * File <b>DockerContainer</b> located on fr.islandswars.commons.service.docker
@@ -72,11 +73,12 @@ public class DockerContainer {
 	 * Start this container
 	 *
 	 * @param service the service
+	 * @return an async code to execute
 	 */
-	public void start(DockerService service) {
+	public CompletableFuture<Void> start(DockerService service) {
 		Preconditions.checkNotNull(service);
 
-		service.execSyncCmd(createCmd).thenApplyAsync((response) -> {
+		return service.execSyncCmd(createCmd).thenApplyAsync((response) -> {
 			var id = response.getId();
 			service.getConnection().startContainerCmd(id).exec();
 			return id;
@@ -88,12 +90,13 @@ public class DockerContainer {
 	 *
 	 * @param service the service
 	 * @param timeout a timeout before kill (default 10 seconds)
+	 * @return an async code to execute
 	 */
-	public void stop(DockerService service, int timeout) {
+	public CompletableFuture<Void> stop(DockerService service, int timeout) {
 		Preconditions.checkNotNull(service);
 		Preconditions.checkState(timeout, ref -> ref >= 0);
 
-		service.execSyncCmd(service.getConnection().stopContainerCmd(getContainerId()).withTimeout(timeout == 0 ? 10 : timeout))
+		return service.execSyncCmd(service.getConnection().stopContainerCmd(getContainerId()).withTimeout(timeout == 0 ? 10 : timeout))
 				.thenRunAsync(() -> {
 					service.getConnection().removeContainerCmd(getContainerId());
 					container_id = null;

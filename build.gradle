@@ -12,7 +12,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'java'
 
 group 'fr.islandswars'
-version '0.2'
+version '0.2.3'
 
 sourceCompatibility = 1.15
 targetCompatibility = 1.15
@@ -43,7 +43,7 @@ dependencies {
     compile 'com.rabbitmq:amqp-client:5.11.0'
     compile 'com.github.docker-java:docker-java-core:3.2.7'
     compile 'com.github.docker-java:docker-java-transport-httpclient5:3.2.7'
-    implementation 'com.google.code.gson:gson:2.8.6'
+    compile 'com.google.code.gson:gson:2.8.6'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 }
@@ -60,15 +60,6 @@ javadoc {
         options.setVersion(true)
         options.setAuthor(true)
         options.addBooleanOption('html5', true)
-    }
-}
-
-jar {
-    manifest {
-        attributes 'Implementation-Title': rootProject.name, 'Implementation-Version': project.version.toString()
-    }
-    from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
 

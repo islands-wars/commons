@@ -12,7 +12,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'java'
 
 group 'fr.islandswars'
-version '0.2.3'
+version '0.2.4'
 
 sourceCompatibility = 1.15
 targetCompatibility = 1.15

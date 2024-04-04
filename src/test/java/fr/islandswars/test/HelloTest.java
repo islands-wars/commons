@@ -1,8 +1,12 @@
-package fr.islandswars.commons;
+package fr.islandswars.test;
+
+import fr.islandswars.commons.Commons;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * File <b>Commons</b> located on fr.islandswars.commons
- * Commons is a part of commons.
+ * File <b>Hello</b> located on fr.islandswars.test
+ * Hello is a part of commons.
  * <p>
  * Copyright (c) 2017 - 2024 Islands Wars.
  * <p>
@@ -21,10 +25,14 @@ package fr.islandswars.commons;
  * <p>
  *
  * @author Jangliu, {@literal <jangliu@islandswars.fr>}
- * Created the 04/04/2024 at 15:52
+ * Created the 04/04/2024 at 16:43
  * @since 0.1
  */
-public class Commons {
+public class HelloTest {
 
-    public static final String NAME = "COMMONS";
+    @Test
+    public void testHelloWorld() {
+        var name = Commons.NAME;
+        assertTrue(name.equalsIgnoreCase("COMMONS"));
+    }
 }

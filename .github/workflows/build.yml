@@ -1,4 +1,4 @@
-name: Core plugin
+name: Commons plugin
 
 on: [push, pull_request]
 

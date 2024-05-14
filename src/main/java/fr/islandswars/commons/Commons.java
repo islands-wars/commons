@@ -1,5 +1,12 @@
 package fr.islandswars.commons;
 
+import fr.islandswars.commons.service.mongodb.MongoDBConnection;
+import org.bson.Document;
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
+
+import java.io.IOException;
+
 /**
  * File <b>Commons</b> located on fr.islandswars.commons
  * Commons is a part of commons.
@@ -13,7 +20,7 @@ package fr.islandswars.commons;
  * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or rFITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * <p>
  * You should have received a copy of the GNU General Public License
@@ -27,4 +34,39 @@ package fr.islandswars.commons;
 public class Commons {
 
     public static final String NAME = "COMMONS";
+
+    public static void main(String[] args) throws IOException {
+        MongoDBConnection mongo = new MongoDBConnection();
+        mongo.load();
+        System.out.println("call load");
+        mongo.connect();
+        System.out.println("call connect");
+        mongo.getConnection().getCollection("test").find()
+                .first()
+                .subscribe(new Subscriber<>() {
+                    @Override
+                    public void onSubscribe(Subscription s) {
+                        s.request(1);
+                    }
+
+                    @Override
+                    public void onNext(Document document) {
+                        System.out.println("next el");
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        System.out.println("error");
+                        t.printStackTrace();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        System.out.println("done");
+                    }
+                });
+        while (true) {
+
+        }
+    }
 }

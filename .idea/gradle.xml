@@ -8,7 +8,7 @@
         <option name="gradleHome" value="" />
         <option name="modules">
           <set>
-            <option value="$PROJECT_DIR$" />
+            <option value="$USER_HOME$/OneDrive/Documents/Code/islands wars/v2/commons" />
           </set>
         </option>
       </GradleProjectSettings>

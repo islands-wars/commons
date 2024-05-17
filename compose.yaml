@@ -29,18 +29,43 @@ services:
       - ./mongodb/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
     command: [--auth]
 
+  redis:
+    build: redis/.
+    ports:
+      - '6379:6379'
+    environment:
+      REDIS_PASSWORD_FILE: /run/secrets/redis_password
+      REDIS_USERNAME_FILE: /run/secrets/redis_username
+      REDIS_DISABLE_DEFAULT_USER: true
+    secrets:
+      - redis_password
+      - redis_username
+    networks:
+      - islands
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -u redis://$(cat /run/secrets/redis_username):$(cat /run/secrets/redis_password)@redis:6379 PING | grep -q PONG"]
+      interval: 2s
+      timeout: 12s
+      retries: 5
+      start_period: 10s
+
   commons:
     build: .
     networks:
       - islands
     secrets:
       - redis_password
+      - redis_host
+      - redis_port
+      - redis_username
       - mongodb_password
       - mongodb_username
       - mongodb_host
       - mongodb_port
     depends_on:
       mongo:
+        condition: service_healthy
+      redis:
         condition: service_healthy
 
 networks:
@@ -50,6 +75,12 @@ networks:
 secrets:
   redis_password:
     file: secrets/redis_password
+  redis_host:
+    file: secrets/redis_host
+  redis_port:
+    file: secrets/redis_port
+  redis_username:
+    file: secrets/redis_username
   mongodb_root_password:
     file: secrets/mongodb_root_password
   mongodb_root_username:

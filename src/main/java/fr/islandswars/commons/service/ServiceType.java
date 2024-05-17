@@ -1,7 +1,5 @@
 package fr.islandswars.commons.service;
 
-import java.io.File;
-
 /**
  * File <b>ServiceType</b> located on fr.islandswars.commons.service
  * ServiceType is a part of commons.
@@ -28,7 +26,10 @@ import java.io.File;
  */
 public enum ServiceType {
 
-    REDIS("redis_password"),
+    REDIS_PASSWORD("redis_password"),
+    REDIS_HOST("redis_host"),
+    REDIS_PORT("redis_port"),
+    REDIS_USERNAME("redis_username"),
     MONGO_PASSWORD("mongodb_password"),
     MONGO_HOST("mongodb_host"),
     MONGO_PORT("mongodb_port"),

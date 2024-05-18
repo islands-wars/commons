@@ -49,11 +49,34 @@ services:
       retries: 5
       start_period: 10s
 
+  rabbitmq:
+    build: rmq/.
+    ports:
+      - '5672:5672'
+    environment:
+      RMQ_PASSWORD_FILE: /run/secrets/rmq_password
+      RMQ_USERNAME_FILE: /run/secrets/rmq_username
+    secrets:
+      - rmq_password
+      - rmq_username
+    networks:
+      - islands
+    healthcheck:
+      test: ["CMD-SHELL", "rabbitmq-diagnostics -q ping"]
+      interval: 2s
+      timeout: 12s
+      retries: 5
+      start_period: 10s
+
   commons:
     build: .
     networks:
       - islands
     secrets:
+      - rmq_password
+      - rmq_username
+      - rmq_host
+      - rmq_port
       - redis_password
       - redis_host
       - redis_port
@@ -67,12 +90,22 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
 
 networks:
   islands:
     driver: bridge
 
 secrets:
+  rmq_password:
+    file: secrets/rmq_password
+  rmq_username:
+    file: secrets/rmq_username
+  rmq_host:
+    file: secrets/rmq_host
+  rmq_port:
+    file: secrets/rmq_port
   redis_password:
     file: secrets/redis_password
   redis_host:

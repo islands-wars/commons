@@ -77,7 +77,7 @@ public class RedisConnection implements ServiceConnection<RedisAsyncCommands<Str
 
     @Override
     public void load() throws NullPointerException {
-        var host = DockerSecretsLoader.getValue(ServiceType.REDIS_HOST);
+        var host = DockerSecretsLoader.getValue(ServiceType.REDIS_HOSTNAME);
         var port = DockerSecretsLoader.getValue(ServiceType.REDIS_PORT);
         var user = DockerSecretsLoader.getValue(ServiceType.REDIS_USERNAME);
         var pass = DockerSecretsLoader.getValue(ServiceType.REDIS_PASSWORD);

@@ -84,7 +84,7 @@ public class MongoDBConnection implements ServiceConnection<MongoDatabase> {
     public void load() throws NullPointerException {
         var pass = DockerSecretsLoader.getValue(ServiceType.MONGO_PASSWORD);
         var user = DockerSecretsLoader.getValue(ServiceType.MONGO_USERNAME);
-        var host = DockerSecretsLoader.getValue(ServiceType.MONGO_HOST);
+        var host = DockerSecretsLoader.getValue(ServiceType.MONGO_HOSTNAME);
         var port = DockerSecretsLoader.getValue(ServiceType.MONGO_PORT);
 
         MongoCredential credential = MongoCredential.createCredential(user, DATABASE, pass.toCharArray());

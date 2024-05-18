@@ -26,14 +26,19 @@ package fr.islandswars.commons.service;
  */
 public enum ServiceType {
 
+    RMQ_PASSWORD("rmq_password"),
+    RMQ_HOSTNAME("rmq_host"),
+    RMQ_USERNAME("rmq_username"),
+    RMQ_PORT("rmq_port"),
     REDIS_PASSWORD("redis_password"),
-    REDIS_HOST("redis_host"),
-    REDIS_PORT("redis_port"),
+    REDIS_HOSTNAME("redis_host"),
     REDIS_USERNAME("redis_username"),
+    REDIS_PORT("redis_port"),
     MONGO_PASSWORD("mongodb_password"),
-    MONGO_HOST("mongodb_host"),
-    MONGO_PORT("mongodb_port"),
-    MONGO_USERNAME("mongodb_username");
+    MONGO_HOSTNAME("mongodb_host"),
+    MONGO_USERNAME("mongodb_username"),
+    MONGO_PORT("mongodb_port");
+
 
     private static final String path = "/run/secrets/";
     private final        String secretFileName;

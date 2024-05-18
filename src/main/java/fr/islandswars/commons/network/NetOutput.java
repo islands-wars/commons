@@ -72,4 +72,5 @@ public interface NetOutput {
 
     void writeVarLong(long l) throws IOException;
 
+    byte[] getBuffer();
 }

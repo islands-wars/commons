@@ -46,6 +46,11 @@ public class OutputByteBuffer implements NetOutput {
     }
 
     @Override
+    public byte[] getBuffer() {
+        return getByteBuffer().array();
+    }
+
+    @Override
     public void writeBigInteger(BigInteger bInt) {
         if (bInt == null)
             throw new IllegalArgumentException("BigInteger cannot be null!");

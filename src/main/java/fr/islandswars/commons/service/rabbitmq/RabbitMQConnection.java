@@ -1,14 +1,15 @@
 package fr.islandswars.commons.service.rabbitmq;
 
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.*;
+import fr.islandswars.commons.network.NetOutput;
 import fr.islandswars.commons.secrets.DockerSecretsLoader;
 import fr.islandswars.commons.service.ServiceConnection;
 import fr.islandswars.commons.service.ServiceType;
+import fr.islandswars.commons.utils.LogUtils;
 import fr.islandswars.commons.utils.Preconditions;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -95,5 +96,33 @@ public class RabbitMQConnection implements ServiceConnection<Channel> {
         factory.setPassword(pass);
         factory.setHost(host);
         factory.setPort(Integer.decode(port));
+    }
+
+    public void notifyTopic(NetOutput buffer, String queueName, String routingKey) throws Exception {
+        if (!isClosed()) {
+            var channel = getConnection();
+            try {
+                channel.queueDeclare(queueName, false, false, false, null);
+                channel.basicPublish("", queueName, null, buffer.getBuffer());
+            } catch (Exception e) {
+                LogUtils.error(e);
+            }
+        }
+    }
+
+    public void registerConsumer(String queueName, int prefetchCount) {
+        if (!isClosed()) {
+            var channel = getConnection();
+            try {
+                channel.queueDeclare(queueName, false, false, false, null);
+                channel.basicQos(prefetchCount);
+                channel.basicConsume(queueName, true, (consumerTag, delivery) -> {
+                    String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
+                    System.out.println(" [x] Received '" + message + "'");
+                }, consumerTag -> { });
+            } catch (IOException e) {
+                LogUtils.error(e);
+            }
+        }
     }
 }

@@ -60,4 +60,22 @@ public class RedisTest {
         var result = connection.ping().get();
         assertEquals(result, "PONG");
     }
+
+    @Test
+    @Order(2)
+    public void testSetValue() throws ExecutionException, InterruptedException {
+        assertNotNull(connection, "Database connection should not be null");
+
+        var result = connection.set("test", "value").get();
+        assertEquals(result, "OK");
+    }
+
+    @Test
+    @Order(3)
+    public void testGetValue() throws ExecutionException, InterruptedException {
+        assertNotNull(connection, "Database connection should not be null");
+
+        var result = connection.get("test").get();
+        assertEquals(result, "value");
+    }
 }

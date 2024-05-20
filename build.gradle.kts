@@ -35,15 +35,27 @@ tasks.shadowJar {
         attributes["Main-Class"] = "fr.islandswars.commons.Commons"
     }
 }
+val sourceJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("sources")
+    from(sourceSets.main.get().allSource)
+}
+
+val javadocJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("javadoc")
+    from(tasks.javadoc.get().destinationDir)
+}
 
 publishing {
     publications {
         create<MavenPublication>("gpr") {
-            project.shadow.component(this)
-
+            //project.shadow.component(this)
+            from(components["shadow"])
             groupId = rootProject.group.toString()
             artifactId = rootProject.name
             version = version
+
+            artifact(sourceJar)
+            artifact(javadocJar)
 
             pom {
                 name.set(rootProject.name)

@@ -1,5 +1,6 @@
 package fr.islandswars.commons.service.mongodb;
 
+import fr.islandswars.commons.utils.LogUtils;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
@@ -70,7 +71,8 @@ public class FutureSubscriber<T> implements Subscriber<T> {
         try {
             return getFuture().get(timeout, unit);
         } catch (Exception e) {
-            throw new TimeoutException("Timed out waiting for completion");
+            LogUtils.error(e);
+            return null;
         }
     }
 

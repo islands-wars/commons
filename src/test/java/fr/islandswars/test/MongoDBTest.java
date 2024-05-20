@@ -102,6 +102,8 @@ public class MongoDBTest {
         var doc = Document.parse(gson.toJson(testDoc));
         assertEquals(doc.get("id", Integer.class), 1);
         assertEquals(doc.get("strings", List.class).size(), 2);
+        assertEquals(doc.get("name", String.class).length(), 5);
+        assertNull(doc.get("j", Long.class));
     }
 
     @Test

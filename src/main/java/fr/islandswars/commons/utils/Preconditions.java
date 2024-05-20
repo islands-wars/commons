@@ -36,7 +36,7 @@ public class Preconditions {
      */
     public static <T> void checkNotNull(T reference) {
         if (reference == null)
-            throw new NullPointerException("Given reference is null");
+            LogUtils.error(new NullPointerException("Given reference is null"));
     }
 
     /**
@@ -61,7 +61,7 @@ public class Preconditions {
     public static <T> void checkState(T reference, Function<T, Boolean> check, String errorMessage) {
         checkNotNull(reference);
         if (!check.apply(reference))
-            throw new UnsupportedOperationException(errorMessage);
+            LogUtils.error(new UnsupportedOperationException(errorMessage));
     }
 
     /**
@@ -88,7 +88,7 @@ public class Preconditions {
         checkNotNull(reference);
         checkNotNull(to);
         if (!reference.equals(to))
-            throw new UnsupportedOperationException(errorMessage);
+            LogUtils.error(new UnsupportedOperationException(errorMessage));
     }
 }
 

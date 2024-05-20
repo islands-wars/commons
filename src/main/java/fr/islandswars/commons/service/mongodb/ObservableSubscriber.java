@@ -58,8 +58,7 @@ public class ObservableSubscriber<T> implements Subscriber<T> {
 
     @Override
     public void onError(final Throwable t) {
-        t.printStackTrace();
-        //LogUtils.error(t);
+        LogUtils.error(t);
         onComplete();
     }
 
@@ -99,9 +98,9 @@ public class ObservableSubscriber<T> implements Subscriber<T> {
         subscription.request(Integer.MAX_VALUE);
         try {
             if (!latch.await(timeout, unit)) {
-                throw new TimeoutException("Publisher onComplete timed out");
+                LogUtils.error( new TimeoutException("Publisher onComplete timed out"));
             }
-        } catch (TimeoutException | InterruptedException e) {
+        } catch (InterruptedException e) {
             LogUtils.error(e);
         }
         return this;

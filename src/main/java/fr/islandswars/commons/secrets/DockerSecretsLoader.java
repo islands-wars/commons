@@ -1,15 +1,11 @@
 package fr.islandswars.commons.secrets;
 
 import fr.islandswars.commons.service.ServiceType;
+import fr.islandswars.commons.utils.LogUtils;
 
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * File <b>DockerSecretsLoader</b> located on fr.islandswars.commons.secrets
@@ -41,7 +37,7 @@ public class DockerSecretsLoader {
         try {
             return new String(Files.readAllBytes(Paths.get(type.getSecret())));
         } catch (IOException e) {
-            e.printStackTrace();
+            LogUtils.error(e);
         }
         return type.getSecret();
     }

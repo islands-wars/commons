@@ -1,10 +1,11 @@
 plugins {
     id("java")
+    id("maven-publish")
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "fr.islandswars"
-version = "0.2"
+version = "0.2.1"
 
 repositories {
     mavenCentral()

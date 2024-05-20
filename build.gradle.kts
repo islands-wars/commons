@@ -1,7 +1,6 @@
 plugins {
     id("java")
     id("maven-publish")
-    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "fr.islandswars"
@@ -30,11 +29,6 @@ tasks.withType<Jar> {
     }
 }
 
-tasks.shadowJar {
-    manifest {
-        attributes["Main-Class"] = "fr.islandswars.commons.Commons"
-    }
-}
 val sourceJar by tasks.registering(Jar::class) {
     archiveClassifier.set("sources")
     from(sourceSets.main.get().allSource)
@@ -48,8 +42,7 @@ val javadocJar by tasks.registering(Jar::class) {
 publishing {
     publications {
         create<MavenPublication>("gpr") {
-            //project.shadow.component(this)
-            from(components["shadow"])
+            from(components["java"])
             groupId = rootProject.group.toString()
             artifactId = rootProject.name
             version = version

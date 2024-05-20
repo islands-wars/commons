@@ -135,10 +135,6 @@ public class ByteBufferPool implements Pool {
         private final ArrayDeque<ByteBuffer> queue = new ArrayDeque<>();
         private       int                    outstanding;
 
-        protected void finalize() {
-            empty();
-        }
-
         void empty() {
             while (!queue.isEmpty()) {
                 masterQueue.add(queue.poll());

@@ -1,8 +1,8 @@
-package fr.islandswars.commons;
+package fr.islandswars.commons.service;
 
 /**
- * File <b>Commons</b> located on fr.islandswars.commons
- * Commons is a part of commons.
+ * File <b>ServiceConnection</b> located on fr.islandswars.commons.service
+ * ServiceConnection is a part of commons.
  * <p>
  * Copyright (c) 2017 - 2024 Islands Wars.
  * <p>
@@ -21,8 +21,18 @@ package fr.islandswars.commons;
  * <p>
  *
  * @author Jangliu, {@literal <jangliu@islandswars.fr>}
- * Created the 04/04/2024 at 15:52
+ * Created the 29/04/2024 at 20:06
  * @since 0.1
  */
-public class Commons {
+public interface ServiceConnection<T> {
+
+    void close() throws Exception;
+
+    void connect() throws Exception;
+
+    T getConnection();
+
+    boolean isClosed();
+
+    void load() throws NullPointerException;
 }

@@ -1,10 +1,14 @@
-package fr.islandswars.commons.utils;
+package fr.islandswars.test;
 
-import java.util.function.Consumer;
+import fr.islandswars.commons.utils.DatabaseError;
+import fr.islandswars.commons.utils.LogUtils;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * File <b>LogUtils</b> located on fr.islandswars.commons.utils
- * LogUtils is a part of commons.
+ * File <b>ErrorTest</b> located on fr.islandswars.test
+ * ErrorTest is a part of commons.
  * <p>
  * Copyright (c) 2017 - 2024 Islands Wars.
  * <p>
@@ -23,28 +27,18 @@ import java.util.function.Consumer;
  * <p>
  *
  * @author Jangliu, {@literal <jangliu@islandswars.fr>}
- * Created the 02/05/2024 at 18:05
- * @since 0.1
+ * Created the 27/05/2024 at 18:51
+ * @since 0.2.6
  */
-public class LogUtils {
+public class ErrorTest {
 
-    private static Consumer<Exception> errorConsumer;
+    private final String MESSAGE = "Custom message";
 
-    public static void error(String message, Throwable t) {
-        Preconditions.checkNotNull(message);
-        Preconditions.checkNotNull(t);
-        error(new DatabaseError(message, t));
+    @Test
+    public void testError() {
+        LogUtils.setErrorConsummer((e)-> {
+            assertEquals(e.getMessage(), MESSAGE, "Error message should be the same");
+        });
+        LogUtils.error(new DatabaseError("Custom message",new Throwable()));
     }
-
-    public static void error(Exception e) {
-        Preconditions.checkNotNull(errorConsumer);
-        Preconditions.checkNotNull(e);
-
-        errorConsumer.accept(e);
-    }
-
-    public static void setErrorConsummer(Consumer<Exception> errorConsummer) {
-        LogUtils.errorConsumer = errorConsummer;
-    }
-
 }

@@ -3,13 +3,14 @@ package fr.islandswars.commons.service.redis;
 import fr.islandswars.commons.secrets.DockerSecretsLoader;
 import fr.islandswars.commons.service.ServiceConnection;
 import fr.islandswars.commons.service.ServiceType;
+import fr.islandswars.commons.utils.LogUtils;
 import fr.islandswars.commons.utils.Preconditions;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.ExecutionException;
 
 /**
  * File <b>RedisConnection</b> located on fr.islandswars.commons.service.redis
@@ -37,20 +38,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class RedisConnection implements ServiceConnection<RedisAsyncCommands<String, String>> {
 
-    private final AtomicBoolean                           status;
-    private       RedisURI                                settings;
-    private       StatefulRedisConnection<String, String> connection;
-    private       RedisAsyncCommands<String, String>      executor;
+    private RedisURI                                settings;
+    private StatefulRedisConnection<String, String> connection;
+    private RedisAsyncCommands<String, String>      executor;
 
-    public RedisConnection() {
-        this.status = new AtomicBoolean(false);
-    }
 
     @Override
     public void close() throws Exception {
         executor.quit().get();
         connection.close();
-        status.set(false);
     }
 
     @Override
@@ -60,7 +56,6 @@ public class RedisConnection implements ServiceConnection<RedisAsyncCommands<Str
         RedisClient client = RedisClient.create(settings);
         this.connection = client.connect();
         this.executor = connection.async();
-        status.set(true);
     }
 
     @Override
@@ -72,7 +67,15 @@ public class RedisConnection implements ServiceConnection<RedisAsyncCommands<Str
 
     @Override
     public boolean isClosed() {
-        return status.get();
+        if (executor != null) {
+            try {
+                return !executor.ping().get().equals("PONG");
+            } catch (InterruptedException | ExecutionException e) {
+                LogUtils.error(e);
+                return true;
+            }
+        } else
+            return true;
     }
 
     @Override

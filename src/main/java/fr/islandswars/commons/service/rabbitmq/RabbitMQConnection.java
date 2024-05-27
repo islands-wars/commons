@@ -68,13 +68,13 @@ public class RabbitMQConnection implements ServiceConnection<Channel> {
                 connect();
                 return connection.createChannel();
             } catch (IOException | TimeoutException e) {
-                LogUtils.error(new RuntimeException(e));
+                LogUtils.error(e);
             }
         } else {
             try {
                 return connection.createChannel();
             } catch (IOException e) {
-                LogUtils.error(new RuntimeException(e));
+                LogUtils.error(e);
             }
         }
         return null;

@@ -26,7 +26,8 @@ package fr.islandswars.commons.utils;
  */
 public class DatabaseError extends Exception {
 
-    public DatabaseError(Throwable t) {
-        super.addSuppressed(t);
+    public DatabaseError(String message, Throwable t) {
+        super(message, t);
+        super.setStackTrace(t.getStackTrace());
     }
 }

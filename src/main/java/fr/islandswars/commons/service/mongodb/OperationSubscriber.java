@@ -34,5 +34,4 @@ public class OperationSubscriber<T> extends ObservableSubscriber<T> {
         s.request(Integer.MAX_VALUE);
     }
 
-
 }

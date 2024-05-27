@@ -58,7 +58,7 @@ public class ObservableSubscriber<T> implements Subscriber<T> {
 
     @Override
     public void onError(final Throwable t) {
-        LogUtils.error(t);
+        LogUtils.error(t.getMessage(), t);
         onComplete();
     }
 

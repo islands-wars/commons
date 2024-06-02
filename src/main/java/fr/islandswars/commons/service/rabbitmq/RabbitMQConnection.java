@@ -11,7 +11,6 @@ import fr.islandswars.commons.utils.Preconditions;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * File <b>RabbitMQConnection</b> located on fr.islandswars.commons.service.rabbitmq
@@ -39,50 +38,42 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class RabbitMQConnection implements ServiceConnection<Channel> {
 
-    private final AtomicBoolean     status;
-    private       ConnectionFactory factory;
-    private       Connection        connection;
-
-    public RabbitMQConnection() {
-        this.status = new AtomicBoolean(false);
-    }
+    private ConnectionFactory factory;
+    private Connection        connection;
 
     @Override
     public void close() throws Exception {
         connection.close();
-        status.set(false);
     }
 
     @Override
-    public void connect() throws IOException, TimeoutException {
+    public void connect()  {
         Preconditions.checkNotNull(factory);
 
-        this.connection = factory.newConnection();
-        status.set(true);
+        try {
+            this.connection = factory.newConnection();
+        } catch (IOException | TimeoutException e) {
+            LogUtils.error(e);
+        }
     }
 
     @Override
     public Channel getConnection() {
-        if (connection == null) {
-            try {
-                connect();
-                return connection.createChannel();
-            } catch (IOException | TimeoutException e) {
-                LogUtils.error(e);
-            }
-        } else {
-            try {
-                return connection.createChannel();
-            } catch (IOException e) {
-                LogUtils.error(e);
-            }
+        Preconditions.checkNotNull(connection);
+
+        try {
+            return connection.createChannel();
+        } catch (IOException e) {
+            LogUtils.error(e);
         }
         return null;
     }
 
     @Override
     public boolean isClosed() {
-        return status.get();
+        if (connection != null)
+            return !connection.isOpen();
+        else return true;
     }
 
     @Override

@@ -28,7 +28,7 @@ public interface ServiceConnection<T> {
 
     void close() throws Exception;
 
-    void connect() throws Exception;
+    void connect();
 
     T getConnection();
 

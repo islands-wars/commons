@@ -2,6 +2,7 @@ package fr.islandswars.commons.service.rabbitmq.packet;
 
 import fr.islandswars.commons.network.nio.ByteBufferPool;
 import fr.islandswars.commons.network.nio.InputByteBuffer;
+import fr.islandswars.commons.utils.LogUtils;
 import fr.islandswars.commons.utils.ReflectionUtil;
 
 import java.util.List;
@@ -37,14 +38,20 @@ public class PacketManager {
 
     private final Map<Integer, List<PacketEvent<? extends Packet>>> handlers;
     private final ByteBufferPool                                    pool;
+    private final PacketType.Bound                                  bound;
 
-    public PacketManager(int size, boolean direct) {
+    public PacketManager(PacketType.Bound bound, int size, boolean direct) {
         this.pool = new ByteBufferPool(size, direct);
         this.handlers = new ConcurrentHashMap<>();
+        this.bound = bound;
     }
 
-    public <T extends Packet> void addListener(PacketType type, PacketEvent<T> event) {
+    public <T extends Packet> void addListener(PacketType<T> type, PacketEvent<T> event) {
         var id = type.getId();
+        if (type.getBound().equals(bound)) {
+            LogUtils.error(new IllegalArgumentException("Cannot listen to packet with the same Bound " + bound));
+            return;
+        }
         handlers.compute(id, (k, v) -> {
             if (v == null)
                 v = new CopyOnWriteArrayList<>();
@@ -62,20 +69,20 @@ public class PacketManager {
         return result;
     }
 
-    public void decode(byte[] delivery) throws Exception {
+    public <T extends Packet> void decode(byte[] delivery) throws Exception {
         var input = pool.allocateNetInput();
         ((InputByteBuffer) input).getByteBuffer().put(delivery);
         ((InputByteBuffer) input).getByteBuffer().flip();
-        var packetId = input.readInt();
-        if (PacketType.packetList.containsKey(packetId)) {
-            Class<? extends Packet> packetClass = PacketType.packetList.get(packetId);
-            Packet                  packet      = ReflectionUtil.getConstructorAccessor(packetClass).newInstance();
+        var           packetId   = input.readInt();
+        PacketType<T> packetType = PacketType.getPacketType(packetId);
+        if (packetType != null) {
+            T packet = ReflectionUtil.getConstructorAccessor(packetType.getPacketClass()).newInstance();
             packet.decode(input);
             pool.free(input);
             if (handlers.containsKey(packetId)) {
                 handlers.get(packetId).forEach(event -> {
                     @SuppressWarnings("unchecked")
-                    PacketEvent<Packet> typedEvent = (PacketEvent<Packet>) event;
+                    PacketEvent<T> typedEvent = (PacketEvent<T>) event;
                     typedEvent.receivePacket(packet);
                 });
             }

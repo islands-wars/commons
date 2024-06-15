@@ -1,4 +1,4 @@
-package fr.islandswars.commons.service.rabbitmq.packet.play;
+package fr.islandswars.commons.service.rabbitmq.packet.server;
 
 import fr.islandswars.commons.network.NetInput;
 import fr.islandswars.commons.network.NetOutput;
@@ -6,9 +6,11 @@ import fr.islandswars.commons.service.rabbitmq.packet.Packet;
 import fr.islandswars.commons.service.rabbitmq.packet.PacketType;
 import fr.islandswars.commons.utils.Preconditions;
 
+import java.util.UUID;
+
 /**
- * File <b>PingPacket</b> located on fr.islandswars.commons.service.rabbitmq.packet.play
- * PingPacket is a part of commons.
+ * File <b>PingRequestPacket</b> located on fr.islandswars.commons.service.rabbitmq.packet.server
+ * PingRequestPacket is a part of commons.
  * <p>
  * Copyright (c) 2017 - 2024 Islands Wars.
  * <p>
@@ -27,35 +29,49 @@ import fr.islandswars.commons.utils.Preconditions;
  * <p>
  *
  * @author Jangliu, {@literal <jangliu@islandswars.fr>}
- * Created the 02/06/2024 at 16:55
+ * Created the 15/06/2024 at 19:00
  * @since 0.3
+ * <p>
+ * Sent from the manager to the game server to request a PingResponsePacket.
+ * The code should be sent back by the response.
  */
-public class PingPacket extends Packet {
+public class PingRequestPacket extends Packet {
 
-    private long time;
+    private UUID serverId;
+    private int  code;
 
-    public PingPacket() {
-        super(PacketType.Status.PING.getId());
+    public PingRequestPacket() {
+        super(PacketType.Status.PING_REQUEST.getId());
     }
 
     @Override
     public void decode(NetInput input) throws Exception {
-        this.time = input.readLong();
+        this.serverId = input.readUUID();
+        this.code = input.readInt();
     }
 
     @Override
-    public NetOutput encode(NetOutput output) throws Exception {
-        Preconditions.checkNotNull(time);
+    public void encode(NetOutput output) throws Exception {
+        Preconditions.checkNotNull(serverId);
+        Preconditions.checkNotNull(code);
 
-        output.writeLong(time);
-        return output;
+        output.writeUUID(serverId);
+        output.writeInt(code);
     }
 
-    public long getTime() {
-        return time;
+    public UUID getServerId() {
+        return serverId;
     }
 
-    public void setTime() {
-        this.time = System.currentTimeMillis();
+    public int getCode() {
+        return code;
+    }
+
+    public void setServerId(UUID serverId) {
+        this.serverId = serverId;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
     }
 }

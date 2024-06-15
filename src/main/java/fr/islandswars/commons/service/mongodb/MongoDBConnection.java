@@ -52,22 +52,22 @@ public class MongoDBConnection implements ServiceConnection<MongoDatabase> {
     private       CodecRegistry       codecRegistry;
 
     public MongoDBConnection() {
-        this.status = new AtomicBoolean(false);
+        this.status = new AtomicBoolean(true);
     }
 
     @Override
-    public void close() {
+    public void close() throws Exception {
         client.close();
-        status.set(false);
+        status.set(true);
     }
 
     @Override
-    public void connect() {
+    public void connect() throws Exception {
         Preconditions.checkNotNull(settings);
 
         this.client = MongoClients.create(settings);
         this.base = client.getDatabase(DATABASE);
-        status.set(true);
+        status.set(false);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class MongoDBConnection implements ServiceConnection<MongoDatabase> {
     }
 
     @Override
-    public void load() throws NullPointerException {
+    public void load() {
         var pass = DockerSecretsLoader.getValue(ServiceType.MONGO_PASSWORD);
         var user = DockerSecretsLoader.getValue(ServiceType.MONGO_USERNAME);
         var host = DockerSecretsLoader.getValue(ServiceType.MONGO_HOSTNAME);

@@ -28,11 +28,11 @@ public interface ServiceConnection<T> {
 
     void close() throws Exception;
 
-    void connect();
+    void connect() throws Exception;
 
     T getConnection();
 
     boolean isClosed();
 
-    void load() throws NullPointerException;
+    void load();
 }

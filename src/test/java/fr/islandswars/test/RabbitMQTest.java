@@ -6,11 +6,9 @@ import com.rabbitmq.client.DeliverCallback;
 import fr.islandswars.commons.service.rabbitmq.RabbitMQConnection;
 import org.junit.jupiter.api.*;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -48,7 +46,7 @@ public class RabbitMQTest {
     private static       Channel             channel;
 
     @BeforeAll
-    public static void setupConnection() throws IOException, TimeoutException {
+    public static void setupConnection() throws Exception {
         rabbitClient = new RabbitMQConnection();
         rabbitClient.load();
         rabbitClient.connect();

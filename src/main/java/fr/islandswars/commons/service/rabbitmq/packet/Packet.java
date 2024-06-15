@@ -41,5 +41,5 @@ public abstract class Packet {
 
     public abstract void decode(NetInput input) throws Exception;
 
-    public abstract NetOutput encode(NetOutput output) throws Exception;
+    public abstract void encode(NetOutput output) throws Exception;
 }

@@ -1,4 +1,4 @@
-package fr.islandswars.commons.service.rabbitmq.packet.out;
+package fr.islandswars.commons.service.rabbitmq.packet.server;
 
 import fr.islandswars.commons.network.NetInput;
 import fr.islandswars.commons.network.NetOutput;
@@ -10,8 +10,8 @@ import java.util.Arrays;
 import java.util.UUID;
 
 /**
- * File <b>StatusOutPacket</b> located on fr.islandswars.commons.service.rabbitmq.packet.out
- * StatusOutPacket is a part of commons.
+ * File <b>StatusRequestPacket</b> located on fr.islandswars.commons.service.rabbitmq.packet.server
+ * StatusRequestPacket is a part of commons.
  * <p>
  * Copyright (c) 2017 - 2024 Islands Wars.
  * <p>
@@ -30,69 +30,58 @@ import java.util.UUID;
  * <p>
  *
  * @author Jangliu, {@literal <jangliu@islandswars.fr>}
- * Created the 03/06/2024 at 00:23
+ * Created the 03/06/2024 at 00:20
  * @since 0.3
+ * <p>
+ * Sent from the manager to the game server to request a StatusResponsePacket.
+ * If the status is different from the current server status, updates it.
  */
-public class StatusOutPacket extends Packet {
+public class StatusRequestPacket extends Packet {
 
-    private UUID         serverId;
-    private int          onlinePlayers;
-    private ServerStatus status;
+    private UUID                             serverId;
+    private StatusRequestPacket.ServerStatus status;
 
-
-    public StatusOutPacket() {
-        super(PacketType.Status.STATUS_OUT.getId());
+    public StatusRequestPacket() {
+        super(PacketType.Status.STATUS_REQUEST.getId());
     }
 
     @Override
     public void decode(NetInput input) throws Exception {
         this.serverId = input.readUUID();
-        this.onlinePlayers = input.readInt();
         this.status = ServerStatus.from(input.readInt());
     }
 
     @Override
-    public NetOutput encode(NetOutput output) throws Exception {
+    public void encode(NetOutput output) throws Exception {
         Preconditions.checkNotNull(serverId);
-        Preconditions.checkNotNull(onlinePlayers);
         Preconditions.checkNotNull(status);
 
         output.writeUUID(serverId);
-        output.writeInt(onlinePlayers);
         output.writeInt(status.getId());
-        return output;
-    }
-
-    public ServerStatus getStatus() {
-        return status;
-    }
-
-    public int getOnlinePlayers() {
-        return onlinePlayers;
-    }
-
-    public UUID getServerId() {
-        return serverId;
-    }
-
-    public void setOnlinePlayers(int onlinePlayers) {
-        this.onlinePlayers = onlinePlayers;
-    }
-
-    public void setStatus(ServerStatus status) {
-        this.status = status;
     }
 
     public void setServerId(UUID serverId) {
         this.serverId = serverId;
     }
 
+    public void setStatus(ServerStatus status) {
+        this.status = status;
+    }
+
+    public UUID getServerId() {
+        return serverId;
+    }
+
+    public ServerStatus getStatus() {
+        return status;
+    }
+
     public enum ServerStatus {
-        STARTED(1),
-        READY(2),
-        ENABLE(3),
-        SHUTDOWN(4),
-        DISABLED(5);
+        STARTED(1), //sent in onLoad method
+        READY(2), //sent in onEnable method
+        ENABLE(3), //ready to accept players
+        DISABLE(4), //will no longer accept new players
+        SHUTDOWN(5); //server is stopping
 
         private final int id;
 
@@ -105,7 +94,7 @@ public class StatusOutPacket extends Packet {
         }
 
         public static ServerStatus from(int id) {
-            return Arrays.stream(ServerStatus.values()).filter(s -> s.id == id).findFirst().orElse(ServerStatus.DISABLED);
+            return Arrays.stream(ServerStatus.values()).filter(s -> s.id == id).findFirst().orElse(ServerStatus.SHUTDOWN);
         }
     }
 }

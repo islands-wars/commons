@@ -42,7 +42,6 @@ public class RedisConnection implements ServiceConnection<RedisAsyncCommands<Str
     private StatefulRedisConnection<String, String> connection;
     private RedisAsyncCommands<String, String>      executor;
 
-
     @Override
     public void close() throws Exception {
         executor.quit().get();
@@ -50,7 +49,7 @@ public class RedisConnection implements ServiceConnection<RedisAsyncCommands<Str
     }
 
     @Override
-    public void connect() {
+    public void connect() throws Exception {
         Preconditions.checkNotNull(settings);
 
         RedisClient client = RedisClient.create(settings);
@@ -79,7 +78,7 @@ public class RedisConnection implements ServiceConnection<RedisAsyncCommands<Str
     }
 
     @Override
-    public void load() throws NullPointerException {
+    public void load() {
         var host = DockerSecretsLoader.getValue(ServiceType.REDIS_HOSTNAME);
         var port = DockerSecretsLoader.getValue(ServiceType.REDIS_PORT);
         var user = DockerSecretsLoader.getValue(ServiceType.REDIS_USERNAME);

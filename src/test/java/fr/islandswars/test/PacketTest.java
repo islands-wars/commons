@@ -2,9 +2,11 @@ package fr.islandswars.test;
 
 import fr.islandswars.commons.service.rabbitmq.packet.PacketManager;
 import fr.islandswars.commons.service.rabbitmq.packet.PacketType;
-import fr.islandswars.commons.service.rabbitmq.packet.play.PingPacket;
+import fr.islandswars.commons.service.rabbitmq.packet.server.PingRequestPacket;
+import fr.islandswars.commons.utils.LogUtils;
 import org.junit.jupiter.api.*;
 
+import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -38,30 +40,37 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class PacketTest {
 
-    private static final PacketManager PACKET_MANAGER = new PacketManager(1024, true);
+    private static final PacketManager PACKET_MANAGER = new PacketManager(PacketType.Bound.SERVER, 1024, true);
     private              byte[]        delivery;
+    private final        UUID          serverId       = UUID.randomUUID();
+    private final        int           code           = 17;
+
 
     @BeforeEach
     public void setup() throws Exception {
-        var pingPacket = new PingPacket();
-        pingPacket.setTime();
+        var pingPacket = new PingRequestPacket();
+        pingPacket.setCode(code);
+        pingPacket.setServerId(serverId);
         this.delivery = PACKET_MANAGER.encode(pingPacket);
+
+        LogUtils.setErrorConsummer(System.err::print);
     }
 
     @Test
     @Order(1)
     public void createPacket() {
-        assertEquals(delivery.length, Integer.BYTES + Long.BYTES, "This packet should be of length 12!");
+        assertEquals(delivery.length, 2 * Integer.BYTES + 2 * Long.BYTES, "This packet should be of length 24!");
     }
 
     @Test
     @Order(2)
     public void retrievePacket() throws Exception {
         CountDownLatch latch = new CountDownLatch(1);
-        PACKET_MANAGER.addListener(PacketType.Status.PING, packet -> {
+        PACKET_MANAGER.addListener(PacketType.Status.PING_REQUEST, packet -> {
             try {
-                assertEquals("PingPacket", packet.getClass().getSimpleName());
-                assertTrue(packet.getTime() < System.currentTimeMillis());
+                assertEquals("PingRequestPacket", packet.getClass().getSimpleName());
+                assertEquals(code, packet.getCode());
+                assertEquals(serverId, packet.getServerId());
             } finally {
                 latch.countDown(); // Decrement the latch count to signal completion
             }

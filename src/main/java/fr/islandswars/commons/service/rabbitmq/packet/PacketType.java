@@ -1,15 +1,16 @@
 package fr.islandswars.commons.service.rabbitmq.packet;
 
-import fr.islandswars.commons.service.rabbitmq.packet.in.StatusInPacket;
-import fr.islandswars.commons.service.rabbitmq.packet.out.StatusOutPacket;
-import fr.islandswars.commons.service.rabbitmq.packet.play.PingPacket;
+import fr.islandswars.commons.service.rabbitmq.packet.manager.PingResponsePacket;
+import fr.islandswars.commons.service.rabbitmq.packet.manager.StatusResponsePacket;
+import fr.islandswars.commons.service.rabbitmq.packet.server.PingRequestPacket;
+import fr.islandswars.commons.service.rabbitmq.packet.server.StatusRequestPacket;
 import fr.islandswars.commons.utils.LogUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static fr.islandswars.commons.service.rabbitmq.packet.PacketType.Bound.IN;
-import static fr.islandswars.commons.service.rabbitmq.packet.PacketType.Bound.OUT;
+import static fr.islandswars.commons.service.rabbitmq.packet.PacketType.Bound.MANAGER;
+import static fr.islandswars.commons.service.rabbitmq.packet.PacketType.Bound.SERVER;
 
 /**
  * File <b>PacketType</b> located on fr.islandswars.commons.service.rabbitmq.packet
@@ -35,22 +36,22 @@ import static fr.islandswars.commons.service.rabbitmq.packet.PacketType.Bound.OU
  * Created the 02/06/2024 at 16:46
  * @since 0.3
  */
-public class PacketType {
+public class PacketType<T extends Packet> {
 
-    protected static final Map<Integer, Class<? extends Packet>> packetList = new HashMap<>();
+    protected static final Map<Integer, PacketType<? extends Packet>> packetList = new HashMap<>();
 
-    private final int                     id;
-    private final Class<? extends Packet> packet;
-    private final Bound                   bound;
+    private final int      id;
+    private final Class<T> packet;
+    private final Bound    bound;
 
-    public PacketType(int id, Class<? extends Packet> packet, Bound bound) {
+    public PacketType(int id, Class<T> packet, Bound bound) {
         this.id = id;
         this.packet = packet;
         this.bound = bound;
         if (packetList.containsKey(id))
             LogUtils.error(new IllegalArgumentException("Packet id is already registered."));
         else
-            packetList.put(id, packet);
+            packetList.put(id, this);
     }
 
     public Bound getBound() {
@@ -61,18 +62,27 @@ public class PacketType {
         return id;
     }
 
-    public Class<? extends Packet> getPacketClass() {
+    public Class<T> getPacketClass() {
         return packet;
     }
 
+    //SERVER packet are sent by the game server to the manager
+    //MANAGER packet are sent by the manager to the game server
     public enum Bound {
-        IN,
-        OUT;
+        SERVER,
+        MANAGER
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends Packet> PacketType<T> getPacketType(int id) {
+        return (PacketType<T>) packetList.get(id);
     }
 
     public static final class Status {
-        public static final PacketType PING       = new PacketType(1, PingPacket.class, IN);
-        public static final PacketType STATUS_IN  = new PacketType(2, StatusInPacket.class, IN);
-        public static final PacketType STATUS_OUT = new PacketType(3, StatusOutPacket.class, OUT);
+        public static final PacketType<PingRequestPacket>  PING_REQUEST  = new PacketType<>(1, PingRequestPacket.class, MANAGER);
+        public static final PacketType<PingResponsePacket> PING_RESPONSE = new PacketType<>(2, PingResponsePacket.class, SERVER);
+
+        public static final PacketType<StatusRequestPacket>  STATUS_REQUEST  = new PacketType<>(10, StatusRequestPacket.class, MANAGER);
+        public static final PacketType<StatusResponsePacket> STATUS_RESPONSE = new PacketType<>(11, StatusResponsePacket.class, SERVER);
     }
 }

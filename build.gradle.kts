@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "fr.islandswars"
-version = "0.2.8"
+version = "0.3"
 
 repositories {
     mavenCentral()

@@ -40,7 +40,7 @@ public class RedisTest {
     private static RedisAsyncCommands<String, String> connection;
 
     @BeforeAll
-    public static void setup() {
+    public static void setup() throws Exception {
         redisClient = new RedisConnection();
         redisClient.load();
         redisClient.connect();

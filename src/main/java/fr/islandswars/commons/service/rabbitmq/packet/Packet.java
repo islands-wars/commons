@@ -1,8 +1,11 @@
-package fr.islandswars.commons.service;
+package fr.islandswars.commons.service.rabbitmq.packet;
+
+import fr.islandswars.commons.network.NetInput;
+import fr.islandswars.commons.network.NetOutput;
 
 /**
- * File <b>ServiceConnection</b> located on fr.islandswars.commons.service
- * ServiceConnection is a part of commons.
+ * File <b>Packet</b> located on fr.islandswars.commons.service.rabbitmq.packet
+ * Packet is a part of commons.
  * <p>
  * Copyright (c) 2017 - 2024 Islands Wars.
  * <p>
@@ -21,18 +24,22 @@ package fr.islandswars.commons.service;
  * <p>
  *
  * @author Jangliu, {@literal <jangliu@islandswars.fr>}
- * Created the 29/04/2024 at 20:06
- * @since 0.1
+ * Created the 02/06/2024 at 16:55
+ * @since 0.3
  */
-public interface ServiceConnection<T> {
+public abstract class Packet {
 
-    void close() throws Exception;
+    private final int id;
 
-    void connect() throws Exception;
+    public Packet(int id) {
+        this.id = id;
+    }
 
-    T getConnection();
+    public int getId() {
+        return id;
+    }
 
-    boolean isClosed();
+    public abstract void decode(NetInput input) throws Exception;
 
-    void load();
+    public abstract void encode(NetOutput output) throws Exception;
 }

@@ -48,7 +48,10 @@ public class OutputByteBuffer implements NetOutput {
 
     @Override
     public byte[] getBuffer() {
-        return getByteBuffer().array();
+        byte[] usedBuffer = new byte[buffer.position()];
+        buffer.flip(); // Prepare the buffer for reading
+        buffer.get(usedBuffer);
+        return usedBuffer;
     }
 
     @Override

@@ -52,7 +52,7 @@ public class MongoDBTest {
     private static       MongoDatabase     database;
 
     @BeforeAll
-    public static void setup() {
+    public static void setup() throws Exception {
         mongoClient = new MongoDBConnection();
         mongoClient.load();
         mongoClient.connect();
@@ -60,7 +60,7 @@ public class MongoDBTest {
     }
 
     @AfterAll
-    public static void tearDown() {
+    public static void tearDown() throws Exception {
         mongoClient.close();
     }
 

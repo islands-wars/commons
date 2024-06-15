@@ -1,8 +1,8 @@
-package fr.islandswars.commons.service;
+package fr.islandswars.commons.service.rabbitmq.packet;
 
 /**
- * File <b>ServiceConnection</b> located on fr.islandswars.commons.service
- * ServiceConnection is a part of commons.
+ * File <b>PacketEvent</b> located on fr.islandswars.commons.service.rabbitmq.packet
+ * PacketEvent is a part of commons.
  * <p>
  * Copyright (c) 2017 - 2024 Islands Wars.
  * <p>
@@ -21,18 +21,11 @@ package fr.islandswars.commons.service;
  * <p>
  *
  * @author Jangliu, {@literal <jangliu@islandswars.fr>}
- * Created the 29/04/2024 at 20:06
- * @since 0.1
+ * Created the 02/06/2024 at 20:31
+ * @since 0.3
  */
-public interface ServiceConnection<T> {
+public interface PacketEvent<T extends Packet> {
 
-    void close() throws Exception;
+    void receivePacket(T packet);
 
-    void connect() throws Exception;
-
-    T getConnection();
-
-    boolean isClosed();
-
-    void load();
 }

@@ -10,7 +10,6 @@ import fr.islandswars.commons.utils.LogUtils;
 import fr.islandswars.commons.utils.Preconditions;
 
 import java.io.IOException;
-import java.util.concurrent.TimeoutException;
 
 /**
  * File <b>RabbitMQConnection</b> located on fr.islandswars.commons.service.rabbitmq
@@ -47,14 +46,10 @@ public class RabbitMQConnection implements ServiceConnection<Channel> {
     }
 
     @Override
-    public void connect()  {
+    public void connect() throws Exception {
         Preconditions.checkNotNull(factory);
 
-        try {
-            this.connection = factory.newConnection();
-        } catch (IOException | TimeoutException e) {
-            LogUtils.error(e);
-        }
+        this.connection = factory.newConnection();
     }
 
     @Override
@@ -77,7 +72,7 @@ public class RabbitMQConnection implements ServiceConnection<Channel> {
     }
 
     @Override
-    public void load() throws NullPointerException {
+    public void load() {
         var host = DockerSecretsLoader.getValue(ServiceType.RMQ_HOSTNAME);
         var port = DockerSecretsLoader.getValue(ServiceType.RMQ_PORT);
         var user = DockerSecretsLoader.getValue(ServiceType.RMQ_USERNAME);

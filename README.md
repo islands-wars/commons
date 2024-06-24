@@ -42,3 +42,9 @@ $> gradle build
 ---
 
 > GNU GENERAL PUBLIC LICENSE Version 3
+
+
+
+[JDK]: https://www.oracle.com/fr/java/technologies/downloads/#java21
+
+[cheatsheet]: https://danielkummer.github.io/git-flow-cheatsheet/

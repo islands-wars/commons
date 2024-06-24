@@ -12,6 +12,7 @@ import fr.islandswars.commons.service.ServiceType;
 import fr.islandswars.commons.service.collection.Collection;
 import fr.islandswars.commons.utils.Preconditions;
 import org.bson.Document;
+import org.bson.UuidRepresentation;
 import org.bson.codecs.configuration.CodecRegistry;
 
 import java.util.List;
@@ -89,7 +90,9 @@ public class MongoDBConnection implements ServiceConnection<MongoDatabase> {
 
         MongoCredential credential = MongoCredential.createCredential(user, DATABASE, pass.toCharArray());
 
-        this.settings = MongoClientSettings.builder().credential(credential).applyToClusterSettings(builder -> builder.hosts(List.of(new ServerAddress(host, Integer.decode(port))))).build();
+        this.settings = MongoClientSettings.builder().credential(credential)
+                .applyToClusterSettings(builder -> builder.hosts(List.of(new ServerAddress(host, Integer.decode(port)))))
+                .uuidRepresentation(UuidRepresentation.JAVA_LEGACY).build();
     }
 
     public Collection<Document> getCollection(String name) {

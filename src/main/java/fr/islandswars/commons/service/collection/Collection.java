@@ -49,7 +49,7 @@ public class Collection<T> {
 
     public Collection(MongoCollection<Document> mongoCollection, Class<T> clazz) {
         this.mongoCollection = mongoCollection;
-        this.gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        this.gson = new GsonBuilder().create();
         this.updateOptions = new UpdateOptions().upsert(true);
         this.replaceOptions = new ReplaceOptions().upsert(true);
         this.clazz = clazz;

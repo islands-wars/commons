@@ -2,6 +2,10 @@ package fr.islandswars.commons.service.rabbitmq.packet;
 
 import fr.islandswars.commons.service.rabbitmq.packet.manager.PingResponsePacket;
 import fr.islandswars.commons.service.rabbitmq.packet.manager.StatusResponsePacket;
+import fr.islandswars.commons.service.rabbitmq.packet.proxy.ContainerDownPacket;
+import fr.islandswars.commons.service.rabbitmq.packet.proxy.ContainerUpPacket;
+import fr.islandswars.commons.service.rabbitmq.packet.proxy.ProxyDownPacket;
+import fr.islandswars.commons.service.rabbitmq.packet.proxy.ProxyUpPacket;
 import fr.islandswars.commons.service.rabbitmq.packet.server.PingRequestPacket;
 import fr.islandswars.commons.service.rabbitmq.packet.server.StatusRequestPacket;
 import fr.islandswars.commons.utils.LogUtils;
@@ -9,8 +13,7 @@ import fr.islandswars.commons.utils.LogUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-import static fr.islandswars.commons.service.rabbitmq.packet.PacketType.Bound.MANAGER;
-import static fr.islandswars.commons.service.rabbitmq.packet.PacketType.Bound.SERVER;
+import static fr.islandswars.commons.service.rabbitmq.packet.PacketType.Bound.*;
 
 /**
  * File <b>PacketType</b> located on fr.islandswars.commons.service.rabbitmq.packet
@@ -68,9 +71,11 @@ public class PacketType<T extends Packet> {
 
     //SERVER packet are sent by the game server to the manager
     //MANAGER packet are sent by the manager to the game server
+    //PROXY packet are sent by one manager to another
     public enum Bound {
         SERVER,
-        MANAGER
+        MANAGER,
+        PROXY
     }
 
     @SuppressWarnings("unchecked")
@@ -79,10 +84,15 @@ public class PacketType<T extends Packet> {
     }
 
     public static final class Status {
-        public static final PacketType<PingRequestPacket>  PING_REQUEST  = new PacketType<>(1, PingRequestPacket.class, MANAGER);
-        public static final PacketType<PingResponsePacket> PING_RESPONSE = new PacketType<>(2, PingResponsePacket.class, SERVER);
+        public static final PacketType<ProxyUpPacket>       PROXY_UP_REQUEST       = new PacketType<>(1, ProxyUpPacket.class, PROXY);
+        public static final PacketType<ProxyDownPacket>     PROXY_DOWN_REQUEST     = new PacketType<>(2, ProxyDownPacket.class, PROXY);
+        public static final PacketType<ContainerUpPacket>   CONTAINER_UP_REQUEST   = new PacketType<>(3, ContainerUpPacket.class, PROXY);
+        public static final PacketType<ContainerDownPacket> CONTAINER_DOWN_REQUEST = new PacketType<>(4, ContainerDownPacket.class, PROXY);
 
-        public static final PacketType<StatusRequestPacket>  STATUS_REQUEST  = new PacketType<>(10, StatusRequestPacket.class, MANAGER);
-        public static final PacketType<StatusResponsePacket> STATUS_RESPONSE = new PacketType<>(11, StatusResponsePacket.class, SERVER);
+        public static final PacketType<PingRequestPacket>  PING_REQUEST  = new PacketType<>(10, PingRequestPacket.class, MANAGER);
+        public static final PacketType<PingResponsePacket> PING_RESPONSE = new PacketType<>(11, PingResponsePacket.class, SERVER);
+
+        public static final PacketType<StatusRequestPacket>  STATUS_REQUEST  = new PacketType<>(20, StatusRequestPacket.class, MANAGER);
+        public static final PacketType<StatusResponsePacket> STATUS_RESPONSE = new PacketType<>(21, StatusResponsePacket.class, SERVER);
     }
 }

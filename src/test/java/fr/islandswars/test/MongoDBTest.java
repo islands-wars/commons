@@ -2,7 +2,6 @@ package fr.islandswars.test;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
@@ -46,7 +45,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class MongoDBTest {
 
-    private final static Gson              gson    = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+    private final static Gson              gson    = new GsonBuilder().create();
     private final static TestDoc           testDoc = new TestDoc(1, 2, "myman", "s1", "s2");
     private static       MongoDBConnection mongoClient;
     private static       MongoDatabase     database;
@@ -135,14 +134,11 @@ public class MongoDBTest {
 
     private static class TestDoc {
 
-        @Expose
         @SerializedName("id")
-        private int          i;
-        @Expose
-        private List<String> strings;
-        @Expose
-        private String       name;
-        private long         j;
+        private           int          i;
+        private           List<String> strings;
+        private           String       name;
+        private transient long         j;
 
         public TestDoc(int i, long j, String name, String... values) {
             this.i = i;

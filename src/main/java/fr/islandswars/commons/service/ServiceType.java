@@ -37,7 +37,8 @@ public enum ServiceType {
     MONGO_PASSWORD("mongodb_password"),
     MONGO_HOSTNAME("mongodb_host"),
     MONGO_USERNAME("mongodb_username"),
-    MONGO_PORT("mongodb_port");
+    MONGO_PORT("mongodb_port"),
+    DOCKER_HOST("docker_host");
 
 
     private static final String path = "/run/secrets/";

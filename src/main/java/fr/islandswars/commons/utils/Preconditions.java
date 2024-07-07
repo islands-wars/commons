@@ -35,8 +35,12 @@ public class Preconditions {
      * @param <T>       ref type
      */
     public static <T> void checkNotNull(T reference) {
+        checkNotNull(reference, "Given reference is null");
+    }
+
+    public static <T> void checkNotNull(T reference, String error) {
         if (reference == null)
-            LogUtils.error(new NullPointerException("Given reference is null"));
+            LogUtils.error(new NullPointerException(error));
     }
 
     /**

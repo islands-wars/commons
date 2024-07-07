@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "fr.islandswars"
-version = "0.3.1"
+version = "0.3.2"
 
 repositories {
     mavenCentral()
@@ -15,6 +15,8 @@ dependencies {
     implementation("org.mongodb:mongodb-driver-reactivestreams:5.0.0")
     implementation("io.lettuce:lettuce-core:6.3.2.RELEASE")
     implementation("com.rabbitmq:amqp-client:5.21.0")
+    implementation("com.github.docker-java:docker-java-core:3.3.6")
+    implementation("com.github.docker-java:docker-java-transport-httpclient5:3.3.6")
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 }

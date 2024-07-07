@@ -42,7 +42,8 @@ public class RabbitMQConnection implements ServiceConnection<Channel> {
 
     @Override
     public void close() throws Exception {
-        connection.close();
+        if (connection != null)
+            connection.close();
     }
 
     @Override
@@ -54,7 +55,7 @@ public class RabbitMQConnection implements ServiceConnection<Channel> {
 
     @Override
     public Channel getConnection() {
-        Preconditions.checkNotNull(connection);
+        Preconditions.checkNotNull(connection, "Need to call RabbitMQConnection#load() first.");
 
         try {
             return connection.createChannel();

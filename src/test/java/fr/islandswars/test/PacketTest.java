@@ -78,7 +78,6 @@ public class PacketTest {
         PACKET_MANAGER.decode(delivery);
 
         assertTrue(latch.await(1, TimeUnit.SECONDS), "The packet was not processed in time.");
-
     }
 
 }

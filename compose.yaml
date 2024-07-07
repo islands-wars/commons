@@ -85,6 +85,7 @@ services:
       - mongodb_username
       - mongodb_host
       - mongodb_port
+      - docker_host
     depends_on:
       mongo:
         condition: service_healthy
@@ -126,3 +127,5 @@ secrets:
     file: secrets/mongodb_host
   mongodb_port:
     file: secrets/mongodb_port
+  docker_host:
+    file: secrets/docker_host

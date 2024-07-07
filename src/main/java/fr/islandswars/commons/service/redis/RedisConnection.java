@@ -44,8 +44,10 @@ public class RedisConnection implements ServiceConnection<RedisAsyncCommands<Str
 
     @Override
     public void close() throws Exception {
-        executor.quit().get();
-        connection.close();
+        if (executor != null)
+            executor.quit().get();
+        if (connection != null)
+            connection.close();
     }
 
     @Override
@@ -59,7 +61,7 @@ public class RedisConnection implements ServiceConnection<RedisAsyncCommands<Str
 
     @Override
     public RedisAsyncCommands<String, String> getConnection() {
-        Preconditions.checkNotNull(executor);
+        Preconditions.checkNotNull(executor, "Need to call RedisConnection#load() first.");
 
         return executor;
     }

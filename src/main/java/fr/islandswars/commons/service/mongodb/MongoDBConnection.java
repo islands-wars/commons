@@ -58,7 +58,8 @@ public class MongoDBConnection implements ServiceConnection<MongoDatabase> {
 
     @Override
     public void close() throws Exception {
-        client.close();
+        if (client != null)
+            client.close();
         status.set(true);
     }
 
@@ -73,6 +74,8 @@ public class MongoDBConnection implements ServiceConnection<MongoDatabase> {
 
     @Override
     public MongoDatabase getConnection() {
+        Preconditions.checkNotNull(base, "Need to call MongoDBConnection#load() first.");
+
         return base;
     }
 

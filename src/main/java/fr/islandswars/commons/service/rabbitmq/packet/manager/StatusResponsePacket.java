@@ -35,13 +35,15 @@ import java.util.UUID;
  * <p>
  * Sent from the game server to the manager in response to StatusRequestPacket.
  * Only scenario where this packet is sent without a request :
- * - Server started
+ * - Server load
  * - Server ready
  */
 public class StatusResponsePacket extends Packet {
 
     private UUID                             serverId;
     private int                              onlinePlayers;
+    private long                             upTime;
+    private float                            averageTPS;
     private StatusRequestPacket.ServerStatus status;
 
     public StatusResponsePacket() {
@@ -52,6 +54,8 @@ public class StatusResponsePacket extends Packet {
     public void decode(NetInput input) throws Exception {
         this.serverId = input.readUUID();
         this.onlinePlayers = input.readInt();
+        this.upTime = input.readLong();
+        this.averageTPS = input.readFloat();
         this.status = StatusRequestPacket.ServerStatus.from(input.readInt());
     }
 
@@ -59,10 +63,14 @@ public class StatusResponsePacket extends Packet {
     public void encode(NetOutput output) throws Exception {
         Preconditions.checkNotNull(serverId);
         Preconditions.checkNotNull(onlinePlayers);
+        Preconditions.checkNotNull(upTime);
+        Preconditions.checkNotNull(averageTPS);
         Preconditions.checkNotNull(status);
 
         output.writeUUID(serverId);
         output.writeInt(onlinePlayers);
+        output.writeLong(upTime);
+        output.writeFloat(averageTPS);
         output.writeInt(status.getId());
     }
 
@@ -90,5 +98,19 @@ public class StatusResponsePacket extends Packet {
         this.serverId = serverId;
     }
 
+    public long getUpTime() {
+        return upTime;
+    }
 
+    public void setUpTime(long upTime) {
+        this.upTime = upTime;
+    }
+
+    public float getAverageTPS() {
+        return averageTPS;
+    }
+
+    public void setAverageTPS(float averageTPS) {
+        this.averageTPS = averageTPS;
+    }
 }

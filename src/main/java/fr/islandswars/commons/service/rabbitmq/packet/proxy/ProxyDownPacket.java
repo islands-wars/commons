@@ -31,9 +31,10 @@ import java.util.UUID;
  * @author Jangliu, {@literal <jangliu@islandswars.fr>}
  * Created the 07/07/2024 at 21:19
  * @since 0.3.1
+ * <p>
+ * Sent by a proxy that is shutting down
  */
 public class ProxyDownPacket extends Packet {
-
 
     private UUID proxyId;
 

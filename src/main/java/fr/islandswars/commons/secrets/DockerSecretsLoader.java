@@ -33,12 +33,17 @@ import java.nio.file.Paths;
  */
 public class DockerSecretsLoader {
 
+    private static final Boolean DEBUG = Boolean.parseBoolean(System.getenv("COMPOSE"));
+
     public static String getValue(ServiceType type) {
-        try {
-            return new String(Files.readAllBytes(Paths.get(type.getSecret())));
-        } catch (IOException e) {
-            LogUtils.error(e);
-        }
-        return type.getSecret();
+        if (DEBUG)
+            return System.getenv(type.getSecretFileName());
+        else
+            try {
+                return new String(Files.readAllBytes(Paths.get(type.getSecretPath())));
+            } catch (IOException e) {
+                LogUtils.error(e);
+            }
+        return type.getSecretFileName();
     }
 }

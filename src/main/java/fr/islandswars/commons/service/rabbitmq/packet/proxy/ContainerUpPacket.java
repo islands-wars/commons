@@ -31,9 +31,13 @@ import java.util.UUID;
  * @author Jangliu, {@literal <jangliu@islandswars.fr>}
  * Created the 07/07/2024 at 21:20
  * @since 0.3.1
+ * <p>
+ * Sent by a manager that has started a new container.
+ * The UUID is the key to retrieve container data in redis.
  */
 public class ContainerUpPacket extends Packet {
 
+    private UUID proxyId;
     private UUID containerId;
 
     public ContainerUpPacket() {
@@ -42,13 +46,16 @@ public class ContainerUpPacket extends Packet {
 
     @Override
     public void decode(NetInput input) throws Exception {
+        this.proxyId = input.readUUID();
         this.containerId = input.readUUID();
     }
 
     @Override
     public void encode(NetOutput output) throws Exception {
+        Preconditions.checkNotNull(proxyId);
         Preconditions.checkNotNull(containerId);
 
+        output.writeUUID(proxyId);
         output.writeUUID(containerId);
     }
 
@@ -56,7 +63,15 @@ public class ContainerUpPacket extends Packet {
         return containerId;
     }
 
+    public UUID getProxyId() {
+        return proxyId;
+    }
+
     public void setContainerId(UUID containerId) {
         this.containerId = containerId;
+    }
+
+    public void setProxyId(UUID proxyId) {
+        this.proxyId = proxyId;
     }
 }

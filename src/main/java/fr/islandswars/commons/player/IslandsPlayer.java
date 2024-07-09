@@ -49,6 +49,7 @@ public abstract class IslandsPlayer {
         this.sanctions = new ArrayList<>();
     }
 
+    //should only be called by proxy!
     public void firstConnection(UUID uuid, String PROXY) {
         setUUID(uuid);
         this.firstConnection = TimeUtils.NOW();
@@ -56,6 +57,7 @@ public abstract class IslandsPlayer {
         addRank(new Rank(IslandsRank.PLAYER, PROXY, TimeUtils.NOW()));
     }
 
+    //should only be called by proxy!
     public void welcomeBack() {
         setLastConnection();
     }

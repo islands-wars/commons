@@ -37,7 +37,7 @@ import java.util.UUID;
  */
 public class PingRequestPacket extends Packet {
 
-    private UUID serverId;
+    private UUID managerId;
     private int  code;
 
     public PingRequestPacket() {
@@ -46,29 +46,29 @@ public class PingRequestPacket extends Packet {
 
     @Override
     public void decode(NetInput input) throws Exception {
-        this.serverId = input.readUUID();
+        this.managerId = input.readUUID();
         this.code = input.readInt();
     }
 
     @Override
     public void encode(NetOutput output) throws Exception {
-        Preconditions.checkNotNull(serverId);
+        Preconditions.checkNotNull(managerId);
         Preconditions.checkNotNull(code);
 
-        output.writeUUID(serverId);
+        output.writeUUID(managerId);
         output.writeInt(code);
     }
 
-    public UUID getServerId() {
-        return serverId;
+    public UUID getManagerId() {
+        return managerId;
     }
 
     public int getCode() {
         return code;
     }
 
-    public void setServerId(UUID serverId) {
-        this.serverId = serverId;
+    public void setManagerId(UUID managerId) {
+        this.managerId = managerId;
     }
 
     public void setCode(int code) {

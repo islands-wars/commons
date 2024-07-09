@@ -50,7 +50,7 @@ public class PacketTest {
     public void setup() throws Exception {
         var pingPacket = new PingRequestPacket();
         pingPacket.setCode(code);
-        pingPacket.setServerId(serverId);
+        pingPacket.setManagerId(serverId);
         this.delivery = PACKET_MANAGER.encode(pingPacket);
 
         LogUtils.setErrorConsummer(System.err::print);
@@ -70,7 +70,7 @@ public class PacketTest {
             try {
                 assertEquals("PingRequestPacket", packet.getClass().getSimpleName());
                 assertEquals(code, packet.getCode());
-                assertEquals(serverId, packet.getServerId());
+                assertEquals(serverId, packet.getManagerId());
             } finally {
                 latch.countDown(); // Decrement the latch count to signal completion
             }

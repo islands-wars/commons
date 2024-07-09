@@ -1,5 +1,7 @@
 package fr.islandswars.commons.player.sanction;
 
+import net.kyori.adventure.text.Component;
+
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -60,6 +62,10 @@ public class IslandsSanction {
 
     public String getAuthorName() {
         return authorName;
+    }
+
+    public Component getKickMessage() {
+        return Component.translatable(getReason().getKickKey(), Component.text(getAuthorName()), Component.text(getEnd()));
     }
 
 }

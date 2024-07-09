@@ -2,7 +2,6 @@ package fr.islandswars.commons.service.rabbitmq.packet;
 
 import fr.islandswars.commons.service.rabbitmq.packet.manager.PingResponsePacket;
 import fr.islandswars.commons.service.rabbitmq.packet.manager.StatusResponsePacket;
-import fr.islandswars.commons.service.rabbitmq.packet.proxy.ContainerDownPacket;
 import fr.islandswars.commons.service.rabbitmq.packet.proxy.ContainerUpPacket;
 import fr.islandswars.commons.service.rabbitmq.packet.proxy.ProxyDownPacket;
 import fr.islandswars.commons.service.rabbitmq.packet.proxy.ProxyUpPacket;
@@ -87,7 +86,6 @@ public class PacketType<T extends Packet> {
         public static final PacketType<ProxyUpPacket>       PROXY_UP_REQUEST       = new PacketType<>(1, ProxyUpPacket.class, PROXY);
         public static final PacketType<ProxyDownPacket>     PROXY_DOWN_REQUEST     = new PacketType<>(2, ProxyDownPacket.class, PROXY);
         public static final PacketType<ContainerUpPacket>   CONTAINER_UP_REQUEST   = new PacketType<>(3, ContainerUpPacket.class, PROXY);
-        public static final PacketType<ContainerDownPacket> CONTAINER_DOWN_REQUEST = new PacketType<>(4, ContainerDownPacket.class, PROXY);
 
         public static final PacketType<PingRequestPacket>  PING_REQUEST  = new PacketType<>(10, PingRequestPacket.class, MANAGER);
         public static final PacketType<PingResponsePacket> PING_RESPONSE = new PacketType<>(11, PingResponsePacket.class, SERVER);

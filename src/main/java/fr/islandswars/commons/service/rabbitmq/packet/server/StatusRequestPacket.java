@@ -38,7 +38,7 @@ import java.util.UUID;
  */
 public class StatusRequestPacket extends Packet {
 
-    private UUID                             serverId;
+    private UUID                             managerId;
     private StatusRequestPacket.ServerStatus status;
 
     public StatusRequestPacket() {
@@ -47,29 +47,29 @@ public class StatusRequestPacket extends Packet {
 
     @Override
     public void decode(NetInput input) throws Exception {
-        this.serverId = input.readUUID();
+        this.managerId = input.readUUID();
         this.status = ServerStatus.from(input.readInt());
     }
 
     @Override
     public void encode(NetOutput output) throws Exception {
-        Preconditions.checkNotNull(serverId);
+        Preconditions.checkNotNull(managerId);
         Preconditions.checkNotNull(status);
 
-        output.writeUUID(serverId);
+        output.writeUUID(managerId);
         output.writeInt(status.getId());
     }
 
-    public void setServerId(UUID serverId) {
-        this.serverId = serverId;
+    public void setManagerId(UUID managerId) {
+        this.managerId = managerId;
     }
 
     public void setStatus(ServerStatus status) {
         this.status = status;
     }
 
-    public UUID getServerId() {
-        return serverId;
+    public UUID getManagerId() {
+        return managerId;
     }
 
     public ServerStatus getStatus() {
@@ -77,11 +77,11 @@ public class StatusRequestPacket extends Packet {
     }
 
     public enum ServerStatus {
-        STARTED(1), //sent in onLoad method
-        READY(2), //sent in onEnable method
-        ENABLE(3), //ready to accept players
-        DISABLE(4), //will no longer accept new players
-        SHUTDOWN(5); //server is stopping
+        LOAD(1), //sent in onLoad method by game server
+        ENABLE(2), //sent at the end of onEnable by game server
+        DISABLE(3), //sent by the manager to request a stop
+        SHUTDOWN(4), //sent by the manager to shutdown the server
+        REQUEST(5); //sent by the manager to get the current state
 
         private final int id;
 

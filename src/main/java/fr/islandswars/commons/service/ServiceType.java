@@ -48,7 +48,11 @@ public enum ServiceType {
         this.secretFileName = secretFileName;
     }
 
-    public String getSecret() {
+    public String getSecretFileName() {
+        return secretFileName;
+    }
+
+    public String getSecretPath() {
         return path + secretFileName;
     }
 }

@@ -31,6 +31,9 @@ import java.util.UUID;
  * @author Jangliu, {@literal <jangliu@islandswars.fr>}
  * Created the 07/07/2024 at 21:15
  * @since 0.3.1
+ * <p>
+ * When a new proxy start, it will notify the other using this packet.
+ * The UUID is passed and will be also available in redis
  */
 public class ProxyUpPacket extends Packet {
 

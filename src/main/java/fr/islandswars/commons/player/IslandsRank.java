@@ -1,5 +1,8 @@
 package fr.islandswars.commons.player;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
+
 import java.util.List;
 
 /**
@@ -28,13 +31,19 @@ import java.util.List;
  */
 public enum IslandsRank {
 
-    ADMIN(1),
-    STAFF(2),
-    PLAYER(5);
+    ADMIN(1, "core.player.ranks.admin.name", 0xe50101, "core.player.ranks.admin.name.short"),
+    STAFF(2, "core.player.ranks.staff.name", 0xe50101, "core.player.ranks.staff.name.short"),
+    PLAYER(5, "core.player.ranks.player.name", 0xe50101, "core.player.ranks.player.name.short");
 
-    private final int rankLevel;
+    private final String displayNameKey;
+    private final String displayShortNameKey;
+    private final int    colorCode;
+    private final int    rankLevel;
 
-    IslandsRank(int rankLevel) {
+    IslandsRank(int rankLevel, String displayNameKey, int colorCode, String displayShortNameKey) {
+        this.displayNameKey = displayNameKey;
+        this.displayShortNameKey = displayShortNameKey;
+        this.colorCode = colorCode;
         this.rankLevel = rankLevel;
     }
 
@@ -54,7 +63,19 @@ public enum IslandsRank {
         return getRankLevel() <= IslandsRank.STAFF.getRankLevel();
     }
 
+    public Component getDisplayName() {
+        return Component.translatable(displayNameKey).color(getRankColor());
+    }
+
+    public TextColor getRankColor() {
+        return TextColor.color(colorCode);
+    }
+
     public int getRankLevel() {
         return rankLevel;
+    }
+
+    public String getShortName() {
+        return displayShortNameKey;
     }
 }

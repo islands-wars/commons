@@ -41,6 +41,7 @@ public enum ServiceType {
     DOCKER_HOST("docker_host");
 
 
+    private static final ServiceType[] VALUES = values();
     private static final String path = "/run/secrets/";
     private final        String secretFileName;
 
@@ -54,5 +55,9 @@ public enum ServiceType {
 
     public String getSecretPath() {
         return path + secretFileName;
+    }
+
+    public static ServiceType[] cachedValues() {
+        return VALUES;
     }
 }

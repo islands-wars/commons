@@ -8,7 +8,9 @@ import fr.islandswars.commons.service.rabbitmq.packet.proxy.ProxyUpPacket;
 import fr.islandswars.commons.service.rabbitmq.packet.server.PingRequestPacket;
 import fr.islandswars.commons.service.rabbitmq.packet.server.StatusRequestPacket;
 import fr.islandswars.commons.utils.LogUtils;
-import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static fr.islandswars.commons.service.rabbitmq.packet.PacketType.Bound.*;
 
@@ -38,7 +40,7 @@ import static fr.islandswars.commons.service.rabbitmq.packet.PacketType.Bound.*;
  */
 public class PacketType<T extends Packet> {
 
-    protected static final Int2ObjectArrayMap<PacketType<? extends Packet>> packetList = new Int2ObjectArrayMap<>();
+    protected static final Map<Integer, PacketType<? extends Packet>> packetList = new HashMap<>();
 
     private final int      id;
     private final Class<T> packet;

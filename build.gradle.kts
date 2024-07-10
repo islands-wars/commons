@@ -16,6 +16,7 @@ dependencies {
     implementation("io.lettuce:lettuce-core:6.3.2.RELEASE")
     implementation("com.rabbitmq:amqp-client:5.21.0")
     implementation("com.github.docker-java:docker-java-core:3.3.6")
+    implementation("it.unimi.dsi:fastutil:8.2.1")
     implementation("net.kyori:adventure-api:4.17.0")
     implementation("com.github.docker-java:docker-java-transport-httpclient5:3.3.6")
     testImplementation(platform("org.junit:junit-bom:5.9.1"))

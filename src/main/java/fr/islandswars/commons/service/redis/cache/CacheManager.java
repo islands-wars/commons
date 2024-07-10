@@ -5,11 +5,11 @@ import fr.islandswars.commons.utils.DatabaseError;
 import fr.islandswars.commons.utils.LogUtils;
 import fr.islandswars.commons.utils.Preconditions;
 import io.lettuce.core.api.async.RedisAsyncCommands;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
 import java.lang.reflect.Field;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -40,13 +40,13 @@ import java.util.concurrent.locks.ReentrantLock;
 public abstract class CacheManager {
 
     private final RedisAsyncCommands<String, String> redis;
-    private final String                             keyPrefix;
-    private final ConcurrentMap<String, EntryCache>  fieldsCache;
+    private final String                               keyPrefix;
+    private final Object2ObjectMap<String, EntryCache> fieldsCache;
 
     public CacheManager(String keyPrefix, RedisConnection connection) {
         this.redis = connection.getConnection();
         this.keyPrefix = keyPrefix;
-        this.fieldsCache = new ConcurrentHashMap<>();
+        this.fieldsCache = new Object2ObjectOpenHashMap<>();
         initializeFieldCache();
         updateCache().run();
     }

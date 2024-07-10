@@ -47,10 +47,10 @@ public class CacheTest {
 
     @BeforeAll
     public static void setup() throws Exception {
+        LogUtils.setErrorConsummer((e) -> e.printStackTrace());
         redisClient = new RedisConnection();
         redisClient.load();
         redisClient.connect();
-        LogUtils.setErrorConsummer((e) -> e.printStackTrace());
     }
 
     @AfterAll

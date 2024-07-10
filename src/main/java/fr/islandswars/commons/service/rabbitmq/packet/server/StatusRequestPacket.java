@@ -6,7 +6,6 @@ import fr.islandswars.commons.service.rabbitmq.packet.Packet;
 import fr.islandswars.commons.service.rabbitmq.packet.PacketType;
 import fr.islandswars.commons.utils.Preconditions;
 
-import java.util.Arrays;
 import java.util.UUID;
 
 /**
@@ -60,12 +59,14 @@ public class StatusRequestPacket extends Packet {
         output.writeInt(status.getId());
     }
 
-    public void setManagerId(UUID managerId) {
+    public StatusRequestPacket withManagerId(UUID managerId) {
         this.managerId = managerId;
+        return this;
     }
 
-    public void setStatus(ServerStatus status) {
+    public StatusRequestPacket withStatus(ServerStatus status) {
         this.status = status;
+        return this;
     }
 
     public UUID getManagerId() {
@@ -80,10 +81,11 @@ public class StatusRequestPacket extends Packet {
         LOAD(1), //sent in onLoad method by game server
         ENABLE(2), //sent at the end of onEnable by game server
         DISABLE(3), //sent by the manager to request a stop
-        SHUTDOWN(4), //sent by the manager to shutdown the server
+        SHUTDOWN(4), //sent by the manager to shut down the server
         REQUEST(5); //sent by the manager to get the current state
 
-        private final int id;
+        private static final ServerStatus[] VALUES = values();
+        private final        int            id;
 
         ServerStatus(int id) {
             this.id = id;
@@ -94,7 +96,11 @@ public class StatusRequestPacket extends Packet {
         }
 
         public static ServerStatus from(int id) {
-            return Arrays.stream(ServerStatus.values()).filter(s -> s.id == id).findFirst().orElse(ServerStatus.SHUTDOWN);
+            for (var s : VALUES) {
+                if (s.id == id)
+                    return s;
+            }
+            return ServerStatus.SHUTDOWN;
         }
     }
 }

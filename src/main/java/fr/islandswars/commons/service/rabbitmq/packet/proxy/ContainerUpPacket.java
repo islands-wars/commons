@@ -67,11 +67,13 @@ public class ContainerUpPacket extends Packet {
         return proxyId;
     }
 
-    public void setContainerId(UUID containerId) {
+    public ContainerUpPacket withContainerId(UUID containerId) {
         this.containerId = containerId;
+        return this;
     }
 
-    public void setProxyId(UUID proxyId) {
+    public ContainerUpPacket withProxyId(UUID proxyId) {
         this.proxyId = proxyId;
+        return this;
     }
 }

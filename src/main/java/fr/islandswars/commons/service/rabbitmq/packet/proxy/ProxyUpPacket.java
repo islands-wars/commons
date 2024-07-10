@@ -59,7 +59,8 @@ public class ProxyUpPacket extends Packet {
         return proxyId;
     }
 
-    public void setProxyId(UUID proxyId) {
+    public ProxyUpPacket withProxyId(UUID proxyId) {
         this.proxyId = proxyId;
+        return this;
     }
 }

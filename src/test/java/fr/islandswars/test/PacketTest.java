@@ -2,7 +2,6 @@ package fr.islandswars.test;
 
 import fr.islandswars.commons.service.rabbitmq.packet.PacketManager;
 import fr.islandswars.commons.service.rabbitmq.packet.PacketType;
-import fr.islandswars.commons.service.rabbitmq.packet.server.PingRequestPacket;
 import fr.islandswars.commons.utils.LogUtils;
 import org.junit.jupiter.api.*;
 

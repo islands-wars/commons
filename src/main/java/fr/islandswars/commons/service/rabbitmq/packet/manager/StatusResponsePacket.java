@@ -41,9 +41,6 @@ import java.util.UUID;
 public class StatusResponsePacket extends Packet {
 
     private UUID                             serverId;
-    private int                              onlinePlayers;
-    private long                             upTime;
-    private float                            averageTPS;
     private StatusRequestPacket.ServerStatus status;
 
     public StatusResponsePacket() {
@@ -53,24 +50,15 @@ public class StatusResponsePacket extends Packet {
     @Override
     public void decode(NetInput input) throws Exception {
         this.serverId = input.readUUID();
-        this.onlinePlayers = input.readInt();
-        this.upTime = input.readLong();
-        this.averageTPS = input.readFloat();
         this.status = StatusRequestPacket.ServerStatus.from(input.readInt());
     }
 
     @Override
     public void encode(NetOutput output) throws Exception {
         Preconditions.checkNotNull(serverId);
-        Preconditions.checkNotNull(onlinePlayers);
-        Preconditions.checkNotNull(upTime);
-        Preconditions.checkNotNull(averageTPS);
         Preconditions.checkNotNull(status);
 
         output.writeUUID(serverId);
-        output.writeInt(onlinePlayers);
-        output.writeLong(upTime);
-        output.writeFloat(averageTPS);
         output.writeInt(status.getId());
     }
 
@@ -78,39 +66,17 @@ public class StatusResponsePacket extends Packet {
         return status;
     }
 
-    public int getOnlinePlayers() {
-        return onlinePlayers;
-    }
-
     public UUID getServerId() {
         return serverId;
     }
 
-    public void setOnlinePlayers(int onlinePlayers) {
-        this.onlinePlayers = onlinePlayers;
-    }
-
-    public void setStatus(StatusRequestPacket.ServerStatus status) {
+    public StatusResponsePacket withStatus(StatusRequestPacket.ServerStatus status) {
         this.status = status;
+        return this;
     }
 
-    public void setServerId(UUID serverId) {
+    public StatusResponsePacket withServerId(UUID serverId) {
         this.serverId = serverId;
-    }
-
-    public long getUpTime() {
-        return upTime;
-    }
-
-    public void setUpTime(long upTime) {
-        this.upTime = upTime;
-    }
-
-    public float getAverageTPS() {
-        return averageTPS;
-    }
-
-    public void setAverageTPS(float averageTPS) {
-        this.averageTPS = averageTPS;
+        return this;
     }
 }

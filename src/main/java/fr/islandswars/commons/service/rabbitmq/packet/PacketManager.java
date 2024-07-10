@@ -5,10 +5,10 @@ import fr.islandswars.commons.network.nio.InputByteBuffer;
 import fr.islandswars.commons.utils.LogUtils;
 import fr.islandswars.commons.utils.ReflectionUtil;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * File <b>PacketManager</b> located on fr.islandswars.commons.service.rabbitmq.packet
@@ -36,9 +36,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class PacketManager {
 
-    private final Map<Integer, List<PacketEvent<? extends Packet>>> handlers;
-    private final ByteBufferPool                                    pool;
-    private final PacketType.Bound                                  bound;
+    private final ConcurrentMap<Integer, List<PacketEvent<? extends Packet>>> handlers;
+    private final ByteBufferPool                                              pool;
+    private final PacketType.Bound                                            bound;
 
     public PacketManager(PacketType.Bound bound, int size, boolean direct) {
         this.pool = new ByteBufferPool(size, direct);
@@ -54,7 +54,7 @@ public class PacketManager {
         }
         handlers.compute(id, (k, v) -> {
             if (v == null)
-                v = new CopyOnWriteArrayList<>();
+                v = new ArrayList<>();
             v.add(event);
             return v;
         });

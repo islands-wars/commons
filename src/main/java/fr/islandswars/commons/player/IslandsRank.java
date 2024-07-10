@@ -35,10 +35,11 @@ public enum IslandsRank {
     STAFF(2, "core.player.ranks.staff.name", 0xe50101, "core.player.ranks.staff.name.short"),
     PLAYER(5, "core.player.ranks.player.name", 0xe50101, "core.player.ranks.player.name.short");
 
-    private final String displayNameKey;
-    private final String displayShortNameKey;
-    private final int    colorCode;
-    private final int    rankLevel;
+    private static final IslandsRank[] VALUES = values();
+    private final        String        displayNameKey;
+    private final        String        displayShortNameKey;
+    private final        int           colorCode;
+    private final        int           rankLevel;
 
     IslandsRank(int rankLevel, String displayNameKey, int colorCode, String displayShortNameKey) {
         this.displayNameKey = displayNameKey;
@@ -77,5 +78,9 @@ public enum IslandsRank {
 
     public String getShortName() {
         return displayShortNameKey;
+    }
+
+    public static IslandsRank[] cachedValues() {
+        return VALUES;
     }
 }

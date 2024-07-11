@@ -1,14 +1,8 @@
-package fr.islandswars.test;
-
-import fr.islandswars.commons.utils.DatabaseError;
-import fr.islandswars.commons.utils.LogUtils;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
+package fr.islandswars.commons.utils;
 
 /**
- * File <b>ErrorTest</b> located on fr.islandswars.test
- * ErrorTest is a part of commons.
+ * File <b>IslandsError</b> located on fr.islandswars.commons.utils
+ * IslandsError is a part of commons.
  * <p>
  * Copyright (c) 2017 - 2024 Islands Wars.
  * <p>
@@ -27,18 +21,12 @@ import static org.junit.jupiter.api.Assertions.*;
  * <p>
  *
  * @author Jangliu, {@literal <jangliu@islandswars.fr>}
- * Created the 27/05/2024 at 18:51
- * @since 0.2.6
+ * Created the 10/07/2024 at 17:46
+ * @since 0.4.3
  */
-public class ErrorTest {
+public class IslandsError extends Exception {
 
-    private final String MESSAGE = "Custom message";
-
-    @Test
-    public void testError() {
-        LogUtils.setErrorConsummer((e)-> {
-            assertEquals(e.getMessage(), MESSAGE, "Error message should be the same");
-        });
-        LogUtils.error(new DatabaseError("Custom message",new Throwable()));
+    public IslandsError(String message) {
+        super(message);
     }
 }

@@ -1,5 +1,7 @@
 package fr.islandswars.commons.utils;
 
+import fr.islandswars.commons.log.IslandsLogger;
+
 import java.util.function.Function;
 
 /**
@@ -40,7 +42,7 @@ public class Preconditions {
 
     public static <T> void checkNotNull(T reference, String error) {
         if (reference == null)
-            LogUtils.error(new NullPointerException(error));
+            IslandsLogger.getLogger().logError(new NullPointerException(error));
     }
 
     /**
@@ -65,7 +67,7 @@ public class Preconditions {
     public static <T> void checkState(T reference, Function<T, Boolean> check, String errorMessage) {
         checkNotNull(reference);
         if (!check.apply(reference))
-            LogUtils.error(new UnsupportedOperationException(errorMessage));
+            IslandsLogger.getLogger().logError(new UnsupportedOperationException(errorMessage));
     }
 
     /**
@@ -92,7 +94,7 @@ public class Preconditions {
         checkNotNull(reference);
         checkNotNull(to);
         if (!reference.equals(to))
-            LogUtils.error(new UnsupportedOperationException(errorMessage));
+            IslandsLogger.getLogger().logError(new UnsupportedOperationException(errorMessage));
     }
 }
 

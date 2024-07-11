@@ -3,10 +3,10 @@ package fr.islandswars.commons.service.rabbitmq;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import fr.islandswars.commons.log.IslandsLogger;
 import fr.islandswars.commons.secrets.DockerSecretsLoader;
 import fr.islandswars.commons.service.ServiceConnection;
 import fr.islandswars.commons.service.ServiceType;
-import fr.islandswars.commons.utils.LogUtils;
 import fr.islandswars.commons.utils.Preconditions;
 
 import java.io.IOException;
@@ -60,7 +60,7 @@ public class RabbitMQConnection implements ServiceConnection<Channel> {
         try {
             return connection.createChannel();
         } catch (IOException e) {
-            LogUtils.error(e);
+            IslandsLogger.getLogger().logError(e);
         }
         return null;
     }

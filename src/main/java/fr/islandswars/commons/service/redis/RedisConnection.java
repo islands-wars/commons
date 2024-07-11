@@ -1,9 +1,9 @@
 package fr.islandswars.commons.service.redis;
 
+import fr.islandswars.commons.log.IslandsLogger;
 import fr.islandswars.commons.secrets.DockerSecretsLoader;
 import fr.islandswars.commons.service.ServiceConnection;
 import fr.islandswars.commons.service.ServiceType;
-import fr.islandswars.commons.utils.LogUtils;
 import fr.islandswars.commons.utils.Preconditions;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisURI;
@@ -72,7 +72,7 @@ public class RedisConnection implements ServiceConnection<RedisAsyncCommands<Str
             try {
                 return !executor.ping().get().equals("PONG");
             } catch (InterruptedException | ExecutionException e) {
-                LogUtils.error(e);
+                IslandsLogger.getLogger().logError(e);
                 return true;
             }
         } else

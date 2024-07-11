@@ -1,11 +1,11 @@
 package fr.islandswars.commons.service.rabbitmq.packet;
 
+import fr.islandswars.commons.log.IslandsLogger;
 import fr.islandswars.commons.service.rabbitmq.packet.manager.StatusResponsePacket;
 import fr.islandswars.commons.service.rabbitmq.packet.proxy.ContainerUpPacket;
 import fr.islandswars.commons.service.rabbitmq.packet.proxy.ProxyDownPacket;
 import fr.islandswars.commons.service.rabbitmq.packet.proxy.ProxyUpPacket;
 import fr.islandswars.commons.service.rabbitmq.packet.server.StatusRequestPacket;
-import fr.islandswars.commons.utils.LogUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,7 +49,7 @@ public class PacketType<T extends Packet> {
         this.packet = packet;
         this.bound = bound;
         if (packetList.containsKey(id))
-            LogUtils.error(new IllegalArgumentException("Packet id is already registered."));
+            IslandsLogger.getLogger().logError(new IllegalArgumentException("Packet id is already registered."));
         else
             packetList.put(id, this);
     }

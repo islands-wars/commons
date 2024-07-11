@@ -54,7 +54,7 @@ public class ProxyDownPacket extends Packet {
         output.writeUUID(proxyId);
     }
 
-    public UUID ProxyId() {
+    public UUID getProxyId() {
         return proxyId;
     }
 

@@ -1,7 +1,7 @@
 package fr.islandswars.commons.network.nio;
 
+import fr.islandswars.commons.log.IslandsLogger;
 import fr.islandswars.commons.network.NetOutput;
-import fr.islandswars.commons.utils.LogUtils;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -57,7 +57,7 @@ public class OutputByteBuffer implements NetOutput {
     @Override
     public void writeBigInteger(BigInteger bInt) {
         if (bInt == null)
-            LogUtils.error(new IllegalArgumentException("BigInteger cannot be null!"));
+            IslandsLogger.getLogger().logError(new IllegalArgumentException("BigInteger cannot be null!"));
         var b = bInt.toByteArray();
         if (b[0] == 0)
             Arrays.copyOfRange(b, 1, b.length);
@@ -149,12 +149,12 @@ public class OutputByteBuffer implements NetOutput {
     }
 
     @Override
-    public void writeString(String s) throws IOException {
+    public void writeString(String s) {
         if (s == null)
-            LogUtils.error(new IllegalArgumentException("String cannot be null!"));
+            IslandsLogger.getLogger().logError(new IllegalArgumentException("String cannot be null!"));
         var bytes = s.getBytes(StandardCharsets.UTF_8);
         if (bytes.length > 32767)
-            LogUtils.error(new IOException("String too big (was " + s.length() + " bytes encoded, max " + 32767 + ")"));
+            IslandsLogger.getLogger().logError(new IOException("String too big (was " + s.length() + " bytes encoded, max " + 32767 + ")"));
         else {
             writeVarInt(bytes.length);
             writeBytes(bytes);

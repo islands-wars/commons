@@ -1,10 +1,12 @@
-package fr.islandswars.commons.utils;
+package fr.islandswars.commons.log.internal;
 
-import java.util.function.Consumer;
+import com.google.gson.annotations.SerializedName;
+
+import java.util.logging.Level;
 
 /**
- * File <b>LogUtils</b> located on fr.islandswars.commons.utils
- * LogUtils is a part of commons.
+ * File <b>ErrorLog</b> located on fr.islandswars.commons.log.internal
+ * ErrorLog is a part of commons.
  * <p>
  * Copyright (c) 2017 - 2024 Islands Wars.
  * <p>
@@ -23,28 +25,20 @@ import java.util.function.Consumer;
  * <p>
  *
  * @author Jangliu, {@literal <jangliu@islandswars.fr>}
- * Created the 02/05/2024 at 18:05
- * @since 0.1
+ * Created the 10/07/2024 at 17:42
+ * @since 0.4.3
  */
-public class LogUtils {
+public class ErrorLog extends DefaultLog {
 
-    private static Consumer<Exception> errorConsumer;
+    @SerializedName("stack-trace")
+    private StackTraceElement[] stackTrace;
 
-    public static void error(String message, Throwable t) {
-        Preconditions.checkNotNull(message);
-        Preconditions.checkNotNull(t);
-        error(new DatabaseError(message, t));
+    public ErrorLog(Level level, String msg, String containerName) {
+        super(level, msg, containerName);
     }
 
-    public static void error(Exception e) {
-        Preconditions.checkNotNull(errorConsumer);
-        Preconditions.checkNotNull(e);
-
-        errorConsumer.accept(e);
+    public ErrorLog supplyStacktrace(Throwable throwable) {
+        this.stackTrace = throwable.getStackTrace();
+        return this;
     }
-
-    public static void setErrorConsummer(Consumer<Exception> errorConsummer) {
-        LogUtils.errorConsumer = errorConsummer;
-    }
-
 }

@@ -6,10 +6,10 @@ import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.core.DockerClientImpl;
 import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
 import com.github.dockerjava.transport.DockerHttpClient;
+import fr.islandswars.commons.log.IslandsLogger;
 import fr.islandswars.commons.secrets.DockerSecretsLoader;
 import fr.islandswars.commons.service.ServiceConnection;
 import fr.islandswars.commons.service.ServiceType;
-import fr.islandswars.commons.utils.LogUtils;
 import fr.islandswars.commons.utils.Preconditions;
 
 import java.time.Duration;
@@ -74,7 +74,7 @@ public class DockerConnection implements ServiceConnection<DockerClient> {
                 client.pingCmd().exec();
                 return false;
             } catch (Exception e) {
-                LogUtils.error(e);
+                IslandsLogger.getLogger().logError(e);
                 return true;
             }
     }

@@ -1,7 +1,7 @@
 package fr.islandswars.commons.secrets;
 
+import fr.islandswars.commons.log.IslandsLogger;
 import fr.islandswars.commons.service.ServiceType;
-import fr.islandswars.commons.utils.LogUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -33,16 +33,16 @@ import java.nio.file.Paths;
  */
 public class DockerSecretsLoader {
 
-    private static final Boolean DEBUG = Boolean.parseBoolean(System.getenv("COMPOSE"));
+    private static final Boolean COMPOSE = Boolean.parseBoolean(System.getenv("COMPOSE"));
 
     public static String getValue(ServiceType type) {
-        if (DEBUG)
+        if (COMPOSE)
             return System.getenv(type.getSecretFileName());
         else
             try {
                 return new String(Files.readAllBytes(Paths.get(type.getSecretPath())));
             } catch (IOException e) {
-                LogUtils.error(e);
+                IslandsLogger.getLogger().logError(e);
             }
         return type.getSecretFileName();
     }

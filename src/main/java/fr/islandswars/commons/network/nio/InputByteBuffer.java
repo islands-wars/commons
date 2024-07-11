@@ -1,7 +1,7 @@
 package fr.islandswars.commons.network.nio;
 
+import fr.islandswars.commons.log.IslandsLogger;
 import fr.islandswars.commons.network.NetInput;
-import fr.islandswars.commons.utils.LogUtils;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -65,7 +65,7 @@ public class InputByteBuffer implements NetInput {
     @Override
     public byte[] readBytes(int length) {
         if (length < 0)
-            LogUtils.error(new IllegalArgumentException("Array cannot have length less than 0."));
+            IslandsLogger.getLogger().logError(new IllegalArgumentException("Array cannot have length less than 0."));
         var b = new byte[length];
         buffer.get(b);
         return b;
@@ -110,7 +110,7 @@ public class InputByteBuffer implements NetInput {
     @Override
     public int[] readInts(int length) {
         if (length < 0)
-            LogUtils.error(new IllegalArgumentException("Array cannot have length less than 0."));
+            IslandsLogger.getLogger().logError(new IllegalArgumentException("Array cannot have length less than 0."));
         var i = new int[length];
         for (var index = 0; index < length; index++)
             i[index] = readInt();
@@ -142,7 +142,7 @@ public class InputByteBuffer implements NetInput {
     @Override
     public long[] readLongs(int length) {
         if (length < 0)
-            LogUtils.error(new IllegalArgumentException("Array cannot have length less than 0."));
+            IslandsLogger.getLogger().logError(new IllegalArgumentException("Array cannot have length less than 0."));
         var l = new long[length];
         for (var index = 0; index < length; index++)
             l[index] = readLong();
@@ -174,7 +174,7 @@ public class InputByteBuffer implements NetInput {
     @Override
     public short[] readShorts(int length) {
         if (length < 0)
-            LogUtils.error(new IllegalArgumentException("Array cannot have length less than 0."));
+            IslandsLogger.getLogger().logError(new IllegalArgumentException("Array cannot have length less than 0."));
         var s = new short[length];
         for (var index = 0; index < length; index++)
             s[index] = readShort();
@@ -228,7 +228,7 @@ public class InputByteBuffer implements NetInput {
         while (((b = readByte()) & 0x80) == 0x80) {
             value |= (b & 0x7F) << (size++ * 7);
             if (size > 5)
-                LogUtils.error(new IOException("VarInt too long (length must be <= 5)"));
+                IslandsLogger.getLogger().logError(new IOException("VarInt too long (length must be <= 5)"));
         }
         return value | ((b & 0x7F) << (size * 7));
     }
@@ -241,7 +241,7 @@ public class InputByteBuffer implements NetInput {
         while (((b = readByte()) & 0x80) == 0x80) {
             value |= (long) (b & 0x7F) << (size++ * 7);
             if (size > 10)
-                LogUtils.error(new IOException("VarLong too long (length must be <= 10)"));
+                IslandsLogger.getLogger().logError(new IOException("VarLong too long (length must be <= 10)"));
         }
         return value | ((long) (b & 0x7F) << (size * 7));
     }

@@ -2,8 +2,7 @@ package fr.islandswars.test;
 
 import fr.islandswars.commons.service.rabbitmq.packet.PacketManager;
 import fr.islandswars.commons.service.rabbitmq.packet.PacketType;
-import fr.islandswars.commons.service.rabbitmq.packet.server.PingRequestPacket;
-import fr.islandswars.commons.utils.LogUtils;
+import fr.islandswars.commons.service.rabbitmq.packet.proxy.ProxyDownPacket;
 import org.junit.jupiter.api.*;
 
 import java.util.UUID;
@@ -43,34 +42,28 @@ public class PacketTest {
     private static final PacketManager PACKET_MANAGER = new PacketManager(PacketType.Bound.SERVER, 1024, true);
     private              byte[]        delivery;
     private final        UUID          serverId       = UUID.randomUUID();
-    private final        int           code           = 17;
 
 
     @BeforeEach
     public void setup() throws Exception {
-        var pingPacket = new PingRequestPacket();
-        pingPacket.setCode(code);
-        pingPacket.setManagerId(serverId);
-        this.delivery = PACKET_MANAGER.encode(pingPacket);
-
-        LogUtils.setErrorConsummer(System.err::print);
+        var pingPacket = new ProxyDownPacket();
+        this.delivery = PACKET_MANAGER.encode(pingPacket.withProxyId(serverId));
     }
 
     @Test
     @Order(1)
     public void createPacket() {
-        assertEquals(delivery.length, 2 * Integer.BYTES + 2 * Long.BYTES, "This packet should be of length 24!");
+        assertEquals(delivery.length,  Integer.BYTES + 2 * Long.BYTES, "This packet should be of length 20!");
     }
 
     @Test
     @Order(2)
     public void retrievePacket() throws Exception {
         CountDownLatch latch = new CountDownLatch(1);
-        PACKET_MANAGER.addListener(PacketType.Status.PING_REQUEST, packet -> {
+        PACKET_MANAGER.addListener(PacketType.Status.PROXY_DOWN_REQUEST, packet -> {
             try {
-                assertEquals("PingRequestPacket", packet.getClass().getSimpleName());
-                assertEquals(code, packet.getCode());
-                assertEquals(serverId, packet.getManagerId());
+                assertEquals("ProxyDownPacket", packet.getClass().getSimpleName());
+                assertEquals(serverId, packet.getProxyId());
             } finally {
                 latch.countDown(); // Decrement the latch count to signal completion
             }

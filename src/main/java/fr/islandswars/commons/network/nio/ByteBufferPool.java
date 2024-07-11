@@ -1,9 +1,9 @@
 package fr.islandswars.commons.network.nio;
 
+import fr.islandswars.commons.log.IslandsLogger;
 import fr.islandswars.commons.network.NetInput;
 import fr.islandswars.commons.network.NetOutput;
 import fr.islandswars.commons.network.Pool;
-import fr.islandswars.commons.utils.LogUtils;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayDeque;
@@ -122,7 +122,7 @@ public class ByteBufferPool implements Pool {
 
     private void free(final ByteBuffer buffer) {
         if (direct != buffer.isDirect() || getSize() != buffer.capacity()) {
-            LogUtils.error(new IllegalArgumentException("Wrong buffer returned to pool"));
+            IslandsLogger.getLogger().logError(new IllegalArgumentException("Wrong buffer returned to pool"));
         }
         fastFree(buffer, bufferQueue.get());
     }

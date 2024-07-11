@@ -3,7 +3,6 @@ package fr.islandswars.test;
 import fr.islandswars.commons.service.redis.RedisConnection;
 import fr.islandswars.commons.service.redis.cache.CacheManager;
 import fr.islandswars.commons.service.redis.cache.RedisCache;
-import fr.islandswars.commons.utils.LogUtils;
 import org.junit.jupiter.api.*;
 
 import java.util.concurrent.ExecutionException;
@@ -47,7 +46,6 @@ public class CacheTest {
 
     @BeforeAll
     public static void setup() throws Exception {
-        LogUtils.setErrorConsummer((e) -> e.printStackTrace());
         redisClient = new RedisConnection();
         redisClient.load();
         redisClient.connect();

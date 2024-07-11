@@ -1,8 +1,8 @@
 package fr.islandswars.commons.service.rabbitmq.packet;
 
+import fr.islandswars.commons.log.IslandsLogger;
 import fr.islandswars.commons.network.nio.ByteBufferPool;
 import fr.islandswars.commons.network.nio.InputByteBuffer;
-import fr.islandswars.commons.utils.LogUtils;
 import fr.islandswars.commons.utils.ReflectionUtil;
 
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ public class PacketManager {
     public <T extends Packet> void addListener(PacketType<T> type, PacketEvent<T> event) {
         var id = type.getId();
         if (type.getBound().equals(bound)) {
-            LogUtils.error(new IllegalArgumentException("Cannot listen to packet with the same Bound " + bound));
+            IslandsLogger.getLogger().logError(new IllegalArgumentException("Cannot listen to packet with the same Bound " + bound));
             return;
         }
         handlers.compute(id, (k, v) -> {

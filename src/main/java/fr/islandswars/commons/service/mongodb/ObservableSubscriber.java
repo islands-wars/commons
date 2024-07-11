@@ -1,6 +1,7 @@
 package fr.islandswars.commons.service.mongodb;
 
-import fr.islandswars.commons.utils.LogUtils;
+import fr.islandswars.commons.log.IslandsLogger;
+import fr.islandswars.commons.utils.DatabaseError;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
@@ -58,7 +59,7 @@ public class ObservableSubscriber<T> implements Subscriber<T> {
 
     @Override
     public void onError(final Throwable t) {
-        LogUtils.error(t.getMessage(), t);
+        IslandsLogger.getLogger().logError(new DatabaseError(t.getMessage(), t));
         onComplete();
     }
 
@@ -98,10 +99,10 @@ public class ObservableSubscriber<T> implements Subscriber<T> {
         subscription.request(Integer.MAX_VALUE);
         try {
             if (!latch.await(timeout, unit)) {
-                LogUtils.error( new TimeoutException("Publisher onComplete timed out"));
+                IslandsLogger.getLogger().logError( new TimeoutException("Publisher onComplete timed out"));
             }
         } catch (InterruptedException e) {
-            LogUtils.error(e);
+            IslandsLogger.getLogger().logError(e);
         }
         return this;
     }

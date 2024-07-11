@@ -1,8 +1,8 @@
 package fr.islandswars.commons.service.redis.cache;
 
+import fr.islandswars.commons.log.IslandsLogger;
 import fr.islandswars.commons.service.redis.RedisConnection;
 import fr.islandswars.commons.utils.DatabaseError;
-import fr.islandswars.commons.utils.LogUtils;
 import fr.islandswars.commons.utils.Preconditions;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 
@@ -57,7 +57,7 @@ public abstract class CacheManager {
         if (entryCache != null) {
             redis.set(entryCache.redisKey, value.toString()).whenCompleteAsync((re, th) -> {
                 if (th != null) {
-                    LogUtils.error(new DatabaseError("Cannot set the cache on redis", th));
+                    IslandsLogger.getLogger().logError(new DatabaseError("Cannot set the cache on redis", th));
                 }
             });
             try {
@@ -69,7 +69,7 @@ public abstract class CacheManager {
                 }
                 entryCache.timestamp = System.currentTimeMillis();
             } catch (IllegalAccessException e) {
-                LogUtils.error(e);
+                IslandsLogger.getLogger().logError(e);
             }
         }
     }
@@ -88,7 +88,7 @@ public abstract class CacheManager {
     private void fetchFromRedisAndUpdateLocalCache(EntryCache entryCache, long currentTimeMillis) {
         redis.get(entryCache.redisKey).whenCompleteAsync((re, th) -> {
             if (th != null)
-                LogUtils.error(new DatabaseError("Canno't retrieve key from cache", th));
+                IslandsLogger.getLogger().logError(new DatabaseError("Canno't retrieve key from cache", th));
             else if (re != null) {
                 var value = convertToType(re, entryCache.field.getType());
                 try {
@@ -100,7 +100,7 @@ public abstract class CacheManager {
                     }
                     entryCache.timestamp = currentTimeMillis;
                 } catch (IllegalAccessException e) {
-                    LogUtils.error(e);
+                    IslandsLogger.getLogger().logError(e);
                 }
             }
         });

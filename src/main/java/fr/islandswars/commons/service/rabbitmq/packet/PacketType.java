@@ -1,13 +1,11 @@
 package fr.islandswars.commons.service.rabbitmq.packet;
 
-import fr.islandswars.commons.service.rabbitmq.packet.manager.PingResponsePacket;
+import fr.islandswars.commons.log.IslandsLogger;
 import fr.islandswars.commons.service.rabbitmq.packet.manager.StatusResponsePacket;
 import fr.islandswars.commons.service.rabbitmq.packet.proxy.ContainerUpPacket;
 import fr.islandswars.commons.service.rabbitmq.packet.proxy.ProxyDownPacket;
 import fr.islandswars.commons.service.rabbitmq.packet.proxy.ProxyUpPacket;
-import fr.islandswars.commons.service.rabbitmq.packet.server.PingRequestPacket;
 import fr.islandswars.commons.service.rabbitmq.packet.server.StatusRequestPacket;
-import fr.islandswars.commons.utils.LogUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,7 +49,7 @@ public class PacketType<T extends Packet> {
         this.packet = packet;
         this.bound = bound;
         if (packetList.containsKey(id))
-            LogUtils.error(new IllegalArgumentException("Packet id is already registered."));
+            IslandsLogger.getLogger().logError(new IllegalArgumentException("Packet id is already registered."));
         else
             packetList.put(id, this);
     }
@@ -86,9 +84,6 @@ public class PacketType<T extends Packet> {
         public static final PacketType<ProxyUpPacket>       PROXY_UP_REQUEST       = new PacketType<>(1, ProxyUpPacket.class, PROXY);
         public static final PacketType<ProxyDownPacket>     PROXY_DOWN_REQUEST     = new PacketType<>(2, ProxyDownPacket.class, PROXY);
         public static final PacketType<ContainerUpPacket>   CONTAINER_UP_REQUEST   = new PacketType<>(3, ContainerUpPacket.class, PROXY);
-
-        public static final PacketType<PingRequestPacket>  PING_REQUEST  = new PacketType<>(10, PingRequestPacket.class, MANAGER);
-        public static final PacketType<PingResponsePacket> PING_RESPONSE = new PacketType<>(11, PingResponsePacket.class, SERVER);
 
         public static final PacketType<StatusRequestPacket>  STATUS_REQUEST  = new PacketType<>(20, StatusRequestPacket.class, MANAGER);
         public static final PacketType<StatusResponsePacket> STATUS_RESPONSE = new PacketType<>(21, StatusResponsePacket.class, SERVER);

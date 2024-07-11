@@ -109,7 +109,6 @@ public class RabbitMQTest {
         // Create a consumer that counts down the latch
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
             String receivedMessage = new String(delivery.getBody(), StandardCharsets.UTF_8);
-            System.out.println(receivedMessage);
             assertEquals(message, receivedMessage, "The message received should be the same as the message sent");
             latch.countDown();
         };

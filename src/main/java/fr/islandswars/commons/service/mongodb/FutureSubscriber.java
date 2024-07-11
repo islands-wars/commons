@@ -1,6 +1,6 @@
 package fr.islandswars.commons.service.mongodb;
 
-import fr.islandswars.commons.utils.LogUtils;
+import fr.islandswars.commons.log.IslandsLogger;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
@@ -71,7 +71,7 @@ public class FutureSubscriber<T> implements Subscriber<T> {
         try {
             return getFuture().get(timeout, unit);
         } catch (Exception e) {
-            LogUtils.error(e);
+            IslandsLogger.getLogger().logError(e);
             return null;
         }
     }
